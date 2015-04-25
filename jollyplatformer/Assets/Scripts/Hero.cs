@@ -62,7 +62,10 @@ public class Hero : MonoBehaviour
 
 		if (this.HeroController.GetBigger && this.scale <= 3.0f)
 		{
+			Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
 			this.scale += 0.5f;
+			rb.mass = (1.0f / this.scale);
 		}
 	}
 
