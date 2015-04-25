@@ -65,7 +65,8 @@ public class HeroController : MonoBehaviour
 	{
 		get
 		{
-			return this.GetComponent<GameControllerInput>().GetButton (GameControllerInput.Button.B);
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? false : inputDevice.Action3.IsPressed;
 		}
 	}
 
@@ -73,7 +74,8 @@ public class HeroController : MonoBehaviour
 	{
 		get
 		{
-			return this.GetComponent<GameControllerInput>().GetButtonUp (GameControllerInput.Button.B);
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? false : inputDevice.Action3.WasReleased;
 		}
 	}
 }
