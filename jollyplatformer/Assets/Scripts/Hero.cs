@@ -20,6 +20,7 @@ public class Hero : MonoBehaviour
 	public float ChannelTime;
 	public int PlayerIndex;
 	public GUIText HUDText;
+	public float TimeAtMaxSize;
 
 	private HeroController HeroController;
 
@@ -197,6 +198,7 @@ public class Hero : MonoBehaviour
 				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
 				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
 				projectile.GetComponent<Projectile>().OwnerHero = this;
+				projectile.transform.localScale = this.transform.localScale;
 				Vector2 launchForce = this.ProjectileLaunchForce;
 				if (!this.FacingRight)
 				{
@@ -231,6 +233,8 @@ public class Hero : MonoBehaviour
 	void Die (Hero attackingHero)
 	{
 		this.RespawnTimeLeft = 5.0f;
+		this.SetGrowStage(0);
+		this.StopChannelGrow();
 	}
 
 	void StartChannelGrow()
@@ -251,16 +255,27 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		return (this.scale < (1.0f + (this.ScaleAdjustment * this.ScaleIterations)) && this.IsGrounded());
+		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations;
 	}
 
 	void Grow()
 	{
 		if (this.CanGrow())
 		{
-			Rigidbody2D rb = GetComponent<Rigidbody2D>();
-			this.scale += this.ScaleAdjustment;
-			rb.mass = (1.0f / this.scale);
+			SetGrowStage(this.GetGrowStage() + 1);
 		}
+	}
+
+	void SetGrowStage(int growStage)
+	{
+
+		this.scale = (this.ScaleAdjustment * growStage) + 1.0f;
+		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+		rb.mass = (1.0f / this.scale);
+	}
+
+	int GetGrowStage()
+	{
+		return (int)((this.scale - 1.0f) / ScaleAdjustment);
 	}
 }
