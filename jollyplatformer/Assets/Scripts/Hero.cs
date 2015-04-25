@@ -54,6 +54,11 @@ public class Hero : MonoBehaviour
 		}
 	}
 
+	bool IsGrounded()
+	{
+		return Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));;
+	}
+
 	void Update ()
 	{
 		if (this.RespawnTimeLeft > 0.0f)
@@ -67,7 +72,7 @@ public class Hero : MonoBehaviour
 			}
 		}
 
-		bool grounded = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));
+		bool grounded = this.IsGrounded();
 		JollyDebug.Watch (this, "Grounded", grounded);
 		if (this.HeroController.Jump && grounded)
 		{
@@ -89,12 +94,10 @@ public class Hero : MonoBehaviour
 		}
 		if (this.HeroController.GetBiggerHold && this.IsChanneling)
 		{
-			Debug.Log("Channel");
 			this.TimeSpentChanneling += Time.deltaTime;
 
 			if (this.TimeSpentChanneling > this.ChannelTime)
 			{
-				Debug.Log("Grow");
 				this.StopChannelGrow();
 				this.Grow();
 			}
@@ -107,26 +110,27 @@ public class Hero : MonoBehaviour
 		bool canAct = !this.IsChanneling;
 
 		float horizontal = this.HeroController.HorizontalMovementAxis;
-
-		if (canMove)
+		if (!canMove)
 		{
-			bool movingIntoScreenEdge = (horizontal > 0 && this.FacingRight) || (horizontal < 0 && !this.FacingRight);
-			if (this.AtEdgeOfScreen && movingIntoScreenEdge)
-			{
-				this.GetComponent<Rigidbody2D>().velocity = new Vector2(0, this.GetComponent<Rigidbody2D>().velocity.y);
-				horizontal = 0.0f;
-			}
+			horizontal = 0;
+		}
 
-			if (horizontal * this.GetComponent<Rigidbody2D>().velocity.x < this.MaxSpeed)
-			{
-				this.GetComponent<Rigidbody2D>().AddForce (Vector2.right * horizontal * MoveForce);
-			}
+		bool movingIntoScreenEdge = (horizontal > 0 && this.FacingRight) || (horizontal < 0 && !this.FacingRight);
+		if (this.AtEdgeOfScreen && movingIntoScreenEdge)
+		{
+			this.GetComponent<Rigidbody2D>().velocity = new Vector2(0, this.GetComponent<Rigidbody2D>().velocity.y);
+			horizontal = 0.0f;
+		}
 
-			float maxSpeed = Mathf.Abs (this.MaxSpeed * horizontal);
-			if (Mathf.Abs(this.GetComponent<Rigidbody2D>().velocity.x) > maxSpeed)
-			{
-				this.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign (this.GetComponent<Rigidbody2D>().velocity.x) * maxSpeed, this.GetComponent<Rigidbody2D>().velocity.y);
-			}
+		if (horizontal * this.GetComponent<Rigidbody2D>().velocity.x < this.MaxSpeed)
+		{
+			this.GetComponent<Rigidbody2D>().AddForce (Vector2.right * horizontal * MoveForce);
+		}
+
+		float maxSpeed = Mathf.Abs (this.MaxSpeed * horizontal);
+		if (Mathf.Abs(this.GetComponent<Rigidbody2D>().velocity.x) > maxSpeed)
+		{
+			this.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign (this.GetComponent<Rigidbody2D>().velocity.x) * maxSpeed, this.GetComponent<Rigidbody2D>().velocity.y);
 		}
 
 		if (canAct)
@@ -201,7 +205,7 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		return (this.scale <= 3.0f);
+		return (this.scale <= 3.0f && this.IsGrounded());
 	}
 
 	void Grow()
