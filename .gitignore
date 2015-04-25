@@ -1,0 +1,54 @@
+Library/metadata/
+Build/
+*.userprefs
+.metadata/
+moba1.apk
+Library/CurrentLayout.dwlt
+Temp/UnityLockfile
+Library/InspectorExpandedItems.asset
+Library/expandedItems
+Temp/__EditModeScene
+Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll.mdb
+Library/ScriptAssemblies/Assembly-CSharp.dll.mdb
+Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll.mdb
+Temp/
+Library/ScriptAssemblies/CompilationCompleted.txt
+
+# =============== #
+# Unity generated #
+# =============== #
+iOS/
+Temp/
+Obj/
+UnityGenerated/
+Library/
+iOS/Libraries/
+xcuserdata
+project.xcworkspace
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+pcbuild_Data/

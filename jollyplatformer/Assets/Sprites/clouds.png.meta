@@ -1,0 +1,245 @@
+fileFormatVersion: 2
+guid: 85decfdc536824f40a13f909fc1cba71
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: clouds_0
+    21300002: clouds_1
+    21300004: clouds_2
+    21300006: clouds_3
+    21300008: clouds_4
+    21300010: clouds_5
+    21300012: clouds_6
+    21300014: clouds_7
+    21300016: clouds_8
+    21300018: clouds_9
+    21300020: clouds_10
+    21300022: clouds_11
+    21300024: clouds_12
+    21300026: clouds_13
+    21300028: clouds_14
+    21300030: clouds_15
+    21300032: clouds_16
+    21300034: clouds_17
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: clouds_0
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 1679
+        width: 520
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_1
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 1687
+        width: 545
+        height: 333
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_2
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 1771
+        width: 508
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_3
+      rect:
+        serializedVersion: 2
+        x: 1679
+        y: 1800
+        width: 366
+        height: 248
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_4
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 1428
+        width: 330
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_5
+      rect:
+        serializedVersion: 2
+        x: 499
+        y: 1416
+        width: 590
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_6
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 1501
+        width: 401
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_7
+      rect:
+        serializedVersion: 2
+        x: 1597
+        y: 1446
+        width: 400
+        height: 317
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_8
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 1138
+        width: 510
+        height: 270
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_9
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 1122
+        width: 614
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_10
+      rect:
+        serializedVersion: 2
+        x: 1263
+        y: 999
+        width: 602
+        height: 425
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_11
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 850
+        width: 502
+        height: 272
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_12
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 691
+        width: 544
+        height: 416
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_13
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 595
+        width: 645
+        height: 367
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_14
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 560
+        width: 345
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_15
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 376
+        width: 366
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_16
+      rect:
+        serializedVersion: 2
+        x: 859
+        y: 247
+        width: 450
+        height: 315
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: clouds_17
+      rect:
+        serializedVersion: 2
+        x: 1375
+        y: 191
+        width: 546
+        height: 340
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
