@@ -30,7 +30,7 @@ public class HeroController : MonoBehaviour
 		get
 		{
 			InputDevice inputDevice = this.InputDevice;
-			return inputDevice == null ? 0.0f : inputDevice.LeftStickX;
+			return inputDevice == null ? Input.GetAxis ("Horizontal") : inputDevice.LeftStickX;
 		}
 	}
 
@@ -39,7 +39,7 @@ public class HeroController : MonoBehaviour
 		get
 		{
 			InputDevice inputDevice = this.InputDevice;
-			return inputDevice == null ? false : inputDevice.Action1.WasPressed;
+			return inputDevice == null ? Input.GetButtonDown ("Fire1") : inputDevice.Action1.WasPressed;
 		}
 	}
 
@@ -48,7 +48,7 @@ public class HeroController : MonoBehaviour
 		get
 		{
 			InputDevice inputDevice = this.InputDevice;
-			return inputDevice == null ? false : inputDevice.Action2.WasPressed;
+			return inputDevice == null ? Input.GetButton ("Fire2") : inputDevice.Action2.WasPressed;
 		}
 	}
 
@@ -57,7 +57,7 @@ public class HeroController : MonoBehaviour
 		get
 		{
 			InputDevice inputDevice = this.InputDevice;
-			return inputDevice == null ? false : inputDevice.Action3.WasPressed;
+			return inputDevice == null ? Input.GetButtonDown ("Fire3") : inputDevice.Action3.WasPressed;
 		}
 	}
 
@@ -66,7 +66,7 @@ public class HeroController : MonoBehaviour
 		get
 		{
 			InputDevice inputDevice = this.InputDevice;
-			return inputDevice == null ? false : inputDevice.Action3.IsPressed;
+			return inputDevice == null ? Input.GetButton ("Fire3") : inputDevice.Action3.IsPressed;
 		}
 	}
 
@@ -75,7 +75,7 @@ public class HeroController : MonoBehaviour
 		get
 		{
 			InputDevice inputDevice = this.InputDevice;
-			return inputDevice == null ? false : inputDevice.Action3.WasReleased;
+			return inputDevice == null ? Input.GetButtonUp ("Fire3") : inputDevice.Action3.WasReleased;
 		}
 	}
 }

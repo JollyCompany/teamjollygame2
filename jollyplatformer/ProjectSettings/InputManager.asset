@@ -3290,7 +3290,7 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: left ctrl
+    positiveButton: z
     altNegativeButton: 
     altPositiveButton: mouse 0
     gravity: 1000
@@ -3306,7 +3306,7 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: left alt
+    positiveButton: x
     altNegativeButton: 
     altPositiveButton: mouse 1
     gravity: 1000
@@ -3322,7 +3322,7 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: left cmd
+    positiveButton: c
     altNegativeButton: 
     altPositiveButton: mouse 2
     gravity: 1000
