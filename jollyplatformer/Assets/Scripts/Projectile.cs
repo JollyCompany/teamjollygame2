@@ -25,9 +25,10 @@ public class Projectile : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D collision)
 	{
 		Hero hero = collision.gameObject.GetComponent<Hero>();
-		if (hero != null)
+		if (hero != null && hero != this.OwnerHero)
 		{
 			hero.Hit(this.OwnerHero);
+			Destroy(this.gameObject);
 		}
     }
 }
