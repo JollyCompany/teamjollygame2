@@ -39,7 +39,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400004}
-  - 58: {fileID: 5800000}
   - 61: {fileID: 6100000}
   - 50: {fileID: 5000000}
   - 114: {fileID: 11400000}
@@ -185,22 +184,9 @@ Rigidbody2D:
   m_GravityScale: 2
   m_FixedAngle: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
---- !u!58 &5800000
-CircleCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100004}
-  m_Enabled: 1
-  m_Material: {fileID: 6200000, guid: 4649fa8bf3c9241b88d54993dbb0b093, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: -.0900000036, y: -.170000002}
-  serializedVersion: 2
-  m_Radius: .300000012
+  m_CollisionDetection: 1
 --- !u!61 &6100000
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -211,9 +197,9 @@ BoxCollider2D:
   m_Material: {fileID: 6200000, guid: 4649fa8bf3c9241b88d54993dbb0b093, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: .209999993}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .670000017, y: .699999988}
+  m_Size: {x: .670000017, y: .920000017}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -235,7 +221,7 @@ MonoBehaviour:
   ScreenEdgeDetector: {fileID: 100006}
   ProjectileEmitLocator: {fileID: 148220}
   ChannelLocator: {fileID: 100008}
-  Projectile: {fileID: 100000, guid: cc06d24b547734495b892df464e83110, type: 2}
+  Projectile: {fileID: 100000, guid: bbfe1742032334cdca96228680379636, type: 2}
   ChannelVisual: {fileID: 100000, guid: b92ba7190135c40e0818e81d8b7878ff, type: 2}
   RenderingCamera: {fileID: 0}
   ChannelTime: 2.5

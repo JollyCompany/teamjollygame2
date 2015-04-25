@@ -36,6 +36,8 @@ public class Hero : MonoBehaviour
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
 
+	public Sprite ProjectileSprite;
+
 	void Start ()
 	{
 		this.HeroController = this.GetComponent<HeroController>();
@@ -116,22 +118,25 @@ public class Hero : MonoBehaviour
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
-		if (this.HeroController.GetBiggerStart && this.CanGrow())
-		{
-			this.StartChannelGrow();
-		}
 		if (this.HeroController.GetBiggerEnd)
 		{
 			this.StopChannelGrow();
 		}
-		if (this.HeroController.GetBiggerHold && this.IsChanneling)
+		else if (this.HeroController.GetBiggerHold)
 		{
-			this.TimeSpentChanneling += Time.deltaTime;
-
-			if (this.TimeSpentChanneling > this.ChannelTime)
+			if (this.IsChanneling)
 			{
-				this.StopChannelGrow();
-				this.Grow();
+				this.TimeSpentChanneling += Time.deltaTime;
+
+				if (this.TimeSpentChanneling > this.ChannelTime)
+				{
+					this.StopChannelGrow();
+					this.Grow();
+				}
+			}
+			else if (this.CanGrow ())
+			{
+				this.StartChannelGrow();
 			}
 		}
 	}
@@ -182,6 +187,7 @@ public class Hero : MonoBehaviour
 			{
 				this.TimeUntilNextProjectile = this.ProjectileDelay;
 				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
+				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
 				projectile.GetComponent<Projectile>().OwnerHero = this;
 				Vector2 launchForce = this.ProjectileLaunchForce;
 				if (!this.FacingRight)
