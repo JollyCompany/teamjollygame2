@@ -24,6 +24,8 @@ public class Hero : MonoBehaviour
 	private bool AtEdgeOfScreen = false;
 	private bool FacingRight = true;
 
+	private float RespawnTimeLeft = 0.0f;
+
 	void Start ()
 	{
 		this.HeroController = this.GetComponent<HeroController>();
@@ -48,6 +50,17 @@ public class Hero : MonoBehaviour
 
 	void Update ()
 	{
+		if (this.RespawnTimeLeft > 0.0f)
+		{
+			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
+
+			this.RespawnTimeLeft -= Time.deltaTime;
+			if (this.RespawnTimeLeft <= 0.0f)
+			{
+				this.transform.position = new Vector3(0,0,0);
+			}
+		}
+
 		bool grounded = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));
 		JollyDebug.Watch (this, "Grounded", grounded);
 		if (this.HeroController.Jump && grounded)
@@ -106,6 +119,7 @@ public class Hero : MonoBehaviour
 		{
 			this.TimeUntilNextProjectile = this.ProjectileDelay;
 			GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
+			projectile.GetComponent<Projectile>().OwnerHero = this;
 			Vector2 launchForce = this.ProjectileLaunchForce;
 			if (!this.FacingRight)
 			{
@@ -120,5 +134,25 @@ public class Hero : MonoBehaviour
 	{
 		this.FacingRight = !this.FacingRight;
 		this.scale = this.scale;
+	}
+
+	bool IsAlive()
+	{
+		return (this.RespawnTimeLeft <= 0.0f);
+	}
+
+	public void Hit (Hero attackingHero)
+	{
+		if (this == attackingHero)
+		{
+			return;
+		}
+
+		this.Die(attackingHero);
+	}
+
+	void Die (Hero attackingHero)
+	{
+		this.RespawnTimeLeft = 5.0f;
 	}
 }

@@ -364,6 +364,11 @@ Prefab:
       propertyPath: ProjectileDelay
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 21200000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300002, guid: 0afb31d454bd94378803684ab99ba5d7,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
   m_IsPrefabParent: 0
@@ -511,6 +516,11 @@ Prefab:
       propertyPath: ProjectileDelay
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 21200000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300002, guid: 70d1b359d3bff40b38695c77ce488828,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
   m_IsPrefabParent: 0

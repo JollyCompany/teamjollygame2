@@ -5,6 +5,7 @@ public class Projectile : MonoBehaviour
 {
 	public float Lifetime;
 	private float LifetimeRemaining;
+	public Hero OwnerHero;
 
 	void Start ()
 	{
@@ -20,4 +21,13 @@ public class Projectile : MonoBehaviour
 			Destroy (this.gameObject);
 		}
 	}
+
+	void OnCollisionEnter2D(Collision2D collision)
+	{
+		Hero hero = collision.gameObject.GetComponent<Hero>();
+		if (hero != null)
+		{
+			hero.Hit(this.OwnerHero);
+		}
+    }
 }
