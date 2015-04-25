@@ -34,6 +34,18 @@ public class Hero : MonoBehaviour
 		});
 	}
 
+	private float scale
+	{
+		set
+		{
+			this.transform.localScale = new Vector3((this.FacingRight ? 1.0f : -1.0f) * value, value, 1.0f);
+		}
+		get
+		{
+			return this.transform.localScale.y;
+		}
+	}
+
 	void Update ()
 	{
 		bool grounded = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));
@@ -47,6 +59,11 @@ public class Hero : MonoBehaviour
 		this.AtEdgeOfScreen = viewportPointOfEdgeDetector < 0.0f || viewportPointOfEdgeDetector >= 1.0f;
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
+
+		if (this.HeroController.GetBigger)
+		{
+			this.scale = this.scale * 2;
+		}
 	}
 
 	void FixedUpdate ()
@@ -73,7 +90,7 @@ public class Hero : MonoBehaviour
 
 		if (this.ShouldJump)
 		{
-			this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce);
+			this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
 			this.ShouldJump = false;
 		}
 
@@ -99,6 +116,6 @@ public class Hero : MonoBehaviour
 	void Flip ()
 	{
 		this.FacingRight = !this.FacingRight;
-		this.transform.localScale = this.transform.localScale.SetX(this.FacingRight ? 1.0f : -1.0f);
+		this.scale = this.scale;
 	}
 }
