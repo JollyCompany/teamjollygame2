@@ -84,22 +84,25 @@ public class Hero : MonoBehaviour
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
-		if (this.HeroController.GetBiggerStart && this.CanGrow())
-		{
-			this.StartChannelGrow();
-		}
 		if (this.HeroController.GetBiggerEnd)
 		{
 			this.StopChannelGrow();
 		}
-		if (this.HeroController.GetBiggerHold && this.IsChanneling)
+		else if (this.HeroController.GetBiggerHold)
 		{
-			this.TimeSpentChanneling += Time.deltaTime;
-
-			if (this.TimeSpentChanneling > this.ChannelTime)
+			if (this.IsChanneling)
 			{
-				this.StopChannelGrow();
-				this.Grow();
+				this.TimeSpentChanneling += Time.deltaTime;
+
+				if (this.TimeSpentChanneling > this.ChannelTime)
+				{
+					this.StopChannelGrow();
+					this.Grow();
+				}
+			}
+			else if (this.CanGrow ())
+			{
+				this.StartChannelGrow();
 			}
 		}
 	}
