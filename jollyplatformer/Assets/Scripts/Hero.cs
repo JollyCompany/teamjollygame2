@@ -8,6 +8,9 @@ public class Hero : MonoBehaviour
 	public float MaxSpeed;
 	public float MoveForce;
 	public float JumpForce;
+	public float ScaleAdjustment;
+	public int ScaleIterations;
+	public Vector2 HUDPosition;
 	public GameObject GroundDetector;
 	public GameObject ScreenEdgeDetector;
 	public GameObject ProjectileEmitLocator;
@@ -16,6 +19,7 @@ public class Hero : MonoBehaviour
 	public GameObject ChannelVisual;
 	public Camera RenderingCamera;
 	public float ChannelTime;
+	public int PlayerIndex;
 
 	private HeroController HeroController;
 
@@ -31,6 +35,8 @@ public class Hero : MonoBehaviour
 	private float TimeSpentChanneling = 0.0f;
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
+
+	public Sprite ProjectileSprite;
 
 	void Start ()
 	{
@@ -59,6 +65,34 @@ public class Hero : MonoBehaviour
 		return Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));;
 	}
 
+	void OnGUI()
+	{
+		this.DrawHUD(this.HUDPosition);
+	}
+
+	void DrawHUD(Vector2 position)
+	{
+		float iconSizeWidth = 50;
+		float heartSizeWidth = 35;
+
+		float xPosition = position.x;
+
+		Texture badge = (Texture)Resources.Load(string.Format("p{0}_badge", this.PlayerIndex), typeof(Texture));
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - iconSizeWidth * 0.4f) / 1080.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width), badge);
+		xPosition += (iconSizeWidth * 1.5f);
+
+
+		Texture heart = (Texture)Resources.Load("heart_full", typeof(Texture));
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		xPosition += (heartSizeWidth * 1.1f);
+
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		xPosition += (heartSizeWidth * 1.1f);
+
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		xPosition += (iconSizeWidth * 1.5f);
+	}
+
 	void Update ()
 	{
 		if (this.RespawnTimeLeft > 0.0f)
@@ -84,22 +118,25 @@ public class Hero : MonoBehaviour
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
-		if (this.HeroController.GetBiggerStart && this.CanGrow())
-		{
-			this.StartChannelGrow();
-		}
 		if (this.HeroController.GetBiggerEnd)
 		{
 			this.StopChannelGrow();
 		}
-		if (this.HeroController.GetBiggerHold && this.IsChanneling)
+		else if (this.HeroController.GetBiggerHold)
 		{
-			this.TimeSpentChanneling += Time.deltaTime;
-
-			if (this.TimeSpentChanneling > this.ChannelTime)
+			if (this.IsChanneling)
 			{
-				this.StopChannelGrow();
-				this.Grow();
+				this.TimeSpentChanneling += Time.deltaTime;
+
+				if (this.TimeSpentChanneling > this.ChannelTime)
+				{
+					this.StopChannelGrow();
+					this.Grow();
+				}
+			}
+			else if (this.CanGrow ())
+			{
+				this.StartChannelGrow();
 			}
 		}
 	}
@@ -150,6 +187,7 @@ public class Hero : MonoBehaviour
 			{
 				this.TimeUntilNextProjectile = this.ProjectileDelay;
 				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
+				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
 				projectile.GetComponent<Projectile>().OwnerHero = this;
 				Vector2 launchForce = this.ProjectileLaunchForce;
 				if (!this.FacingRight)
@@ -205,7 +243,7 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		return (this.scale <= 3.0f && this.IsGrounded());
+		return (this.scale < (1.0f + (this.ScaleAdjustment * this.ScaleIterations)) && this.IsGrounded());
 	}
 
 	void Grow()
@@ -213,7 +251,7 @@ public class Hero : MonoBehaviour
 		if (this.CanGrow())
 		{
 			Rigidbody2D rb = GetComponent<Rigidbody2D>();
-			this.scale += 0.5f;
+			this.scale += this.ScaleAdjustment;
 			rb.mass = (1.0f / this.scale);
 		}
 	}
