@@ -32,6 +32,8 @@ public class Hero : MonoBehaviour
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
 
+	public Sprite ProjectileSprite;
+
 	void Start ()
 	{
 		this.HeroController = this.GetComponent<HeroController>();
@@ -153,6 +155,7 @@ public class Hero : MonoBehaviour
 			{
 				this.TimeUntilNextProjectile = this.ProjectileDelay;
 				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
+				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
 				projectile.GetComponent<Projectile>().OwnerHero = this;
 				Vector2 launchForce = this.ProjectileLaunchForce;
 				if (!this.FacingRight)
