@@ -504,43 +504,9 @@ Prefab:
       propertyPath: RenderingCamera
       value: 
       objectReference: {fileID: 46875540}
-    - target: {fileID: 11400002, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
-      propertyPath: PlayerNumber
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
-      propertyPath: JumpForce
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
-      propertyPath: ProjectileDelay
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 21200000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300002, guid: 70d1b359d3bff40b38695c77ce488828,
-        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1167447420
-GameObject:
-  m_PrefabParentObject: {fileID: 100004, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
-  m_PrefabInternal: {fileID: 1126709274}
---- !u!114 &1167447427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1167447420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa4d6d99aa26b4d86baaa0941dbbc4ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ControllerJoystickNumber: 1
-  ControllerKind: 0
 --- !u!1 &1651051169
 GameObject:
   m_ObjectHideFlags: 0

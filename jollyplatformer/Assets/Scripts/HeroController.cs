@@ -32,11 +32,27 @@ public class HeroController : MonoBehaviour
 		}
 	}
 
-	public bool GetBigger
+	public bool GetBiggerStart
 	{
 		get
 		{
 			return this.GetComponent<GameControllerInput>().GetButtonDown (GameControllerInput.Button.B);
+		}
+	}
+
+	public bool GetBiggerHold
+	{
+		get
+		{
+			return this.GetComponent<GameControllerInput>().GetButton (GameControllerInput.Button.B);
+		}
+	}
+
+	public bool GetBiggerEnd
+	{
+		get
+		{
+			return this.GetComponent<GameControllerInput>().GetButtonUp (GameControllerInput.Button.B);
 		}
 	}
 }
