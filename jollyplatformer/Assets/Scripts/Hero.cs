@@ -8,6 +8,9 @@ public class Hero : MonoBehaviour
 	public float MaxSpeed;
 	public float MoveForce;
 	public float JumpForce;
+	public float ScaleAdjustment;
+	public int ScaleIterations;
+	public Vector2 HUDPosition;
 	public GameObject GroundDetector;
 	public GameObject ScreenEdgeDetector;
 	public GameObject ProjectileEmitLocator;
@@ -16,6 +19,7 @@ public class Hero : MonoBehaviour
 	public GameObject ChannelVisual;
 	public Camera RenderingCamera;
 	public float ChannelTime;
+	public int PlayerIndex;
 
 	private HeroController HeroController;
 
@@ -57,6 +61,34 @@ public class Hero : MonoBehaviour
 	bool IsGrounded()
 	{
 		return Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));;
+	}
+
+	void OnGUI()
+	{
+		this.DrawHUD(this.HUDPosition);
+	}
+
+	void DrawHUD(Vector2 position)
+	{
+		float iconSizeWidth = 50;
+		float heartSizeWidth = 35;
+
+		float xPosition = position.x;
+
+		Texture badge = (Texture)Resources.Load(string.Format("p{0}_badge", this.PlayerIndex), typeof(Texture));
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - iconSizeWidth * 0.4f) / 1080.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width), badge);
+		xPosition += (iconSizeWidth * 1.5f);
+
+
+		Texture heart = (Texture)Resources.Load("heart_full", typeof(Texture));
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		xPosition += (heartSizeWidth * 1.1f);
+
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		xPosition += (heartSizeWidth * 1.1f);
+
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		xPosition += (iconSizeWidth * 1.5f);
 	}
 
 	void Update ()
@@ -205,7 +237,7 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		return (this.scale <= 3.0f && this.IsGrounded());
+		return (this.scale < (1.0f + (this.ScaleAdjustment * this.ScaleIterations)) && this.IsGrounded());
 	}
 
 	void Grow()
@@ -213,7 +245,7 @@ public class Hero : MonoBehaviour
 		if (this.CanGrow())
 		{
 			Rigidbody2D rb = GetComponent<Rigidbody2D>();
-			this.scale += 0.5f;
+			this.scale += this.ScaleAdjustment;
 			rb.mass = (1.0f / this.scale);
 		}
 	}
