@@ -60,9 +60,9 @@ public class Hero : MonoBehaviour
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
-		if (this.HeroController.GetBigger)
+		if (this.HeroController.GetBigger && this.scale < 3.0f)
 		{
-			this.scale = this.scale * 2;
+			this.scale += 0.5f;
 		}
 	}
 
