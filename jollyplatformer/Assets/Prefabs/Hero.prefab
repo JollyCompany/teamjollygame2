@@ -226,8 +226,10 @@ MonoBehaviour:
   RenderingCamera: {fileID: 0}
   ChannelTime: 2.5
   PlayerIndex: 0
+  HUDText: {fileID: 13234722, guid: 05cb476ad74084b6c8b1f911d9292899, type: 2}
   ProjectileLaunchForce: {x: 500, y: 10}
   ProjectileDelay: 1
+  ProjectileSprite: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

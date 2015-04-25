@@ -2,7 +2,6 @@
 using System.Collections;
 using Jolly;
 
-
 public class Hero : MonoBehaviour
 {
 	public float MaxSpeed;
@@ -20,6 +19,7 @@ public class Hero : MonoBehaviour
 	public Camera RenderingCamera;
 	public float ChannelTime;
 	public int PlayerIndex;
+	public GUIText HUDText;
 
 	private HeroController HeroController;
 
@@ -74,23 +74,31 @@ public class Hero : MonoBehaviour
 	{
 		float iconSizeWidth = 50;
 		float heartSizeWidth = 35;
+		float textWidth = 100;
 
 		float xPosition = position.x;
 
 		Texture badge = (Texture)Resources.Load(string.Format("p{0}_badge", this.PlayerIndex), typeof(Texture));
-		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - iconSizeWidth * 0.4f) / 1080.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width), badge);
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - iconSizeWidth * 0.5f) / 1080.0f * Screen.height, iconSizeWidth / 1920.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width), badge);
 		xPosition += (iconSizeWidth * 1.5f);
 
 
 		Texture heart = (Texture)Resources.Load("heart_full", typeof(Texture));
-		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
 		xPosition += (heartSizeWidth * 1.1f);
 
-		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
 		xPosition += (heartSizeWidth * 1.1f);
 
-		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
 		xPosition += (iconSizeWidth * 1.5f);
+
+		GUIStyle style = new GUIStyle("label");
+		style.font = this.HUDText.font;
+		style.fontSize = 20;
+		style.alignment = TextAnchor.UpperLeft;
+
+		this.DrawOutlineText(new Rect(xPosition / 1920.0f * Screen.width, 0, textWidth, 40), "00%", style, Color.black, Color.white, 1);
 	}
 
 	void Update ()
