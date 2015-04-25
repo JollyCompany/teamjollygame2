@@ -31,4 +31,12 @@ public class HeroController : MonoBehaviour
 			//return Input.GetButton(string.Format ("Fire[{0}]", this.PlayerNumber));
 		}
 	}
+
+	public bool GetBigger
+	{
+		get
+		{
+			return this.GetComponent<GameControllerInput>().GetButtonDown (GameControllerInput.Button.B);
+		}
+	}
 }
