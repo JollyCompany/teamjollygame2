@@ -75,6 +75,21 @@ GameObject:
   m_Component:
   - 4: {fileID: 400008}
   m_Layer: 0
+  m_Name: ChannelLocator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &148220
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 425412}
+  m_Layer: 0
   m_Name: ProjectileEmitLocator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,12 +127,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.541297, y: 2.59949017, z: 0}
+  m_LocalPosition: {x: -14.2700558, y: 2.59949017, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
   - {fileID: 400000}
   - {fileID: 400006}
+  - {fileID: 425412}
   - {fileID: 400008}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -139,6 +155,18 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400004}
+  m_RootOrder: 4
+--- !u!4 &425412
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 148220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .626602173, y: -.0763888359, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -199,14 +227,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxSpeed: 5
   MoveForce: 35
-  JumpForce: 550
+  JumpForce: 1000
   GroundDetector: {fileID: 100000}
   ScreenEdgeDetector: {fileID: 100006}
-  ProjectileEmitLocator: {fileID: 100008}
+  ProjectileEmitLocator: {fileID: 148220}
+  ChannelLocator: {fileID: 100008}
   Projectile: {fileID: 100000, guid: cc06d24b547734495b892df464e83110, type: 2}
+  ChannelVisual: {fileID: 100000, guid: b92ba7190135c40e0818e81d8b7878ff, type: 2}
   RenderingCamera: {fileID: 0}
+  ChannelTime: 2.5
   ProjectileLaunchForce: {x: 500, y: 10}
-  ProjectileDelay: .0399999991
+  ProjectileDelay: 1
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,7 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d906238c70e5243579e3b0ccc58b0bd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerNumber: 1
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -243,7 +273,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -781157783
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 045aad31c35f84968bd9a35c8775b989, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 70d1b359d3bff40b38695c77ce488828, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

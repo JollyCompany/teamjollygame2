@@ -1,16 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class HeroController : MonoBehaviour
 {
-	public int PlayerNumber;
+	private int playerNumber;
+
+	void Start ()
+	{
+		string playerNumberString = this.name.Substring(this.name.Length-2, 1);
+		Debug.Log (playerNumberString);
+		this.playerNumber = int.Parse(playerNumberString);
+	}
+
+	public InputDevice InputDevice
+	{
+		get
+		{
+			if (this.playerNumber >= InputManager.Devices.Count)
+			{
+				return null;
+			}
+			return InputManager.Devices[this.playerNumber];
+		}
+	}
 
 	public float HorizontalMovementAxis
 	{
 		get
 		{
-			return this.GetComponent<GameControllerInput>().GetAxis (GameControllerInput.Axis.AnalogLeftHorizontal);
-			//return Input.GetAxis (string.Format ("Horizontal[{0}]", this.PlayerNumber));
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? 0.0f : inputDevice.LeftStickX;
 		}
 	}
 
@@ -18,8 +38,8 @@ public class HeroController : MonoBehaviour
 	{
 		get
 		{
-			return this.GetComponent<GameControllerInput>().GetButtonDown (GameControllerInput.Button.A);
-			//return Input.GetButtonDown(string.Format ("Jump[{0}]", this.PlayerNumber));
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? false : inputDevice.Action1.WasPressed;
 		}
 	}
 
@@ -27,16 +47,35 @@ public class HeroController : MonoBehaviour
 	{
 		get
 		{
-			return this.GetComponent<GameControllerInput>().GetButton (GameControllerInput.Button.X);
-			//return Input.GetButton(string.Format ("Fire[{0}]", this.PlayerNumber));
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? false : inputDevice.Action2.WasPressed;
 		}
 	}
 
-	public bool GetBigger
+	public bool GetBiggerStart
 	{
 		get
 		{
-			return this.GetComponent<GameControllerInput>().GetButtonDown (GameControllerInput.Button.B);
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? false : inputDevice.Action3.WasPressed;
+		}
+	}
+
+	public bool GetBiggerHold
+	{
+		get
+		{
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? false : inputDevice.Action3.IsPressed;
+		}
+	}
+
+	public bool GetBiggerEnd
+	{
+		get
+		{
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? false : inputDevice.Action3.WasReleased;
 		}
 	}
 }
