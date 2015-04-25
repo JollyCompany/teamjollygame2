@@ -11,8 +11,11 @@ public class Hero : MonoBehaviour
 	public GameObject GroundDetector;
 	public GameObject ScreenEdgeDetector;
 	public GameObject ProjectileEmitLocator;
+	public GameObject ChannelLocator;
 	public GameObject Projectile;
+	public GameObject ChannelVisual;
 	public Camera RenderingCamera;
+	public float ChannelTime;
 
 	private HeroController HeroController;
 
@@ -25,6 +28,9 @@ public class Hero : MonoBehaviour
 	private bool FacingRight = true;
 
 	private float RespawnTimeLeft = 0.0f;
+	private float TimeSpentChanneling = 0.0f;
+	private bool IsChanneling = false;
+	private GameObject ChannelVisualInstance;
 
 	void Start ()
 	{
@@ -48,6 +54,11 @@ public class Hero : MonoBehaviour
 		}
 	}
 
+	bool IsGrounded()
+	{
+		return Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));;
+	}
+
 	void Update ()
 	{
 		if (this.RespawnTimeLeft > 0.0f)
@@ -61,7 +72,7 @@ public class Hero : MonoBehaviour
 			}
 		}
 
-		bool grounded = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));
+		bool grounded = this.IsGrounded();
 		JollyDebug.Watch (this, "Grounded", grounded);
 		if (this.HeroController.Jump && grounded)
 		{
@@ -73,18 +84,36 @@ public class Hero : MonoBehaviour
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
-		if (this.HeroController.GetBigger && this.scale <= 3.0f)
+		if (this.HeroController.GetBiggerStart && this.CanGrow())
 		{
-			Rigidbody2D rb = GetComponent<Rigidbody2D>();
+			this.StartChannelGrow();
+		}
+		if (this.HeroController.GetBiggerEnd)
+		{
+			this.StopChannelGrow();
+		}
+		if (this.HeroController.GetBiggerHold && this.IsChanneling)
+		{
+			this.TimeSpentChanneling += Time.deltaTime;
 
-			this.scale += 0.5f;
-			rb.mass = (1.0f / this.scale);
+			if (this.TimeSpentChanneling > this.ChannelTime)
+			{
+				this.StopChannelGrow();
+				this.Grow();
+			}
 		}
 	}
 
 	void FixedUpdate ()
 	{
+		bool canMove = !this.IsChanneling;
+		bool canAct = !this.IsChanneling;
+
 		float horizontal = this.HeroController.HorizontalMovementAxis;
+		if (!canMove)
+		{
+			horizontal = 0;
+		}
 
 		bool movingIntoScreenEdge = (horizontal > 0 && this.FacingRight) || (horizontal < 0 && !this.FacingRight);
 		if (this.AtEdgeOfScreen && movingIntoScreenEdge)
@@ -104,30 +133,32 @@ public class Hero : MonoBehaviour
 			this.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign (this.GetComponent<Rigidbody2D>().velocity.x) * maxSpeed, this.GetComponent<Rigidbody2D>().velocity.y);
 		}
 
-		if (this.ShouldJump)
+		if (canAct)
 		{
-			this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
-			this.ShouldJump = false;
-		}
-
-		if ((horizontal > 0 && !this.FacingRight) || (horizontal < 0 && this.FacingRight))
-		{
-			this.Flip();
-		}
-
-		if (this.HeroController.Shooting && this.TimeUntilNextProjectile < 0.0f)
-		{
-			this.TimeUntilNextProjectile = this.ProjectileDelay;
-			GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
-			projectile.GetComponent<Projectile>().OwnerHero = this;
-			Vector2 launchForce = this.ProjectileLaunchForce;
-			if (!this.FacingRight)
+			if (this.ShouldJump)
 			{
-				launchForce = new Vector2(launchForce.x * -1.0f, launchForce.y);
+				this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
+				this.ShouldJump = false;
 			}
-			projectile.GetComponent<Rigidbody2D>().AddForce(launchForce);
-		}
 
+			if ((horizontal > 0 && !this.FacingRight) || (horizontal < 0 && this.FacingRight))
+			{
+				this.Flip();
+			}
+
+			if (this.HeroController.Shooting && this.TimeUntilNextProjectile < 0.0f)
+			{
+				this.TimeUntilNextProjectile = this.ProjectileDelay;
+				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
+				projectile.GetComponent<Projectile>().OwnerHero = this;
+				Vector2 launchForce = this.ProjectileLaunchForce;
+				if (!this.FacingRight)
+				{
+					launchForce = new Vector2(launchForce.x * -1.0f, launchForce.y);
+				}
+				projectile.GetComponent<Rigidbody2D>().AddForce(launchForce);
+			}
+		}
 	}
 
 	void Flip ()
@@ -154,5 +185,36 @@ public class Hero : MonoBehaviour
 	void Die (Hero attackingHero)
 	{
 		this.RespawnTimeLeft = 5.0f;
+	}
+
+	void StartChannelGrow()
+	{
+		this.TimeSpentChanneling = 0.0f;
+		this.IsChanneling = true;
+		this.ChannelVisualInstance = (GameObject)GameObject.Instantiate(this.ChannelVisual, this.ChannelLocator.transform.position, Quaternion.identity);
+		this.ChannelVisualInstance.GetComponent<ChannelVisual>().ChannelTime = this.ChannelTime;
+		this.ChannelVisualInstance.transform.localScale = new Vector3(this.ChannelVisualInstance.transform.localScale.x * this.scale, this.ChannelVisualInstance.transform.localScale.y * this.scale, this.ChannelVisualInstance.transform.localScale.z * this.scale);
+	}
+
+	void StopChannelGrow()
+	{
+		this.TimeSpentChanneling = 0.0f;
+		this.IsChanneling = false;
+		Destroy(this.ChannelVisualInstance);
+	}
+
+	bool CanGrow()
+	{
+		return (this.scale <= 3.0f && this.IsGrounded());
+	}
+
+	void Grow()
+	{
+		if (this.CanGrow())
+		{
+			Rigidbody2D rb = GetComponent<Rigidbody2D>();
+			this.scale += 0.5f;
+			rb.mass = (1.0f / this.scale);
+		}
 	}
 }

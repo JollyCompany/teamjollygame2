@@ -52,12 +52,28 @@ public class HeroController : MonoBehaviour
 		}
 	}
 
-	public bool GetBigger
+	public bool GetBiggerStart
 	{
 		get
 		{
 			InputDevice inputDevice = this.InputDevice;
 			return inputDevice == null ? false : inputDevice.Action3.WasPressed;
+		}
+	}
+
+	public bool GetBiggerHold
+	{
+		get
+		{
+			return this.GetComponent<GameControllerInput>().GetButton (GameControllerInput.Button.B);
+		}
+	}
+
+	public bool GetBiggerEnd
+	{
+		get
+		{
+			return this.GetComponent<GameControllerInput>().GetButtonUp (GameControllerInput.Button.B);
 		}
 	}
 }
