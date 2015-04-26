@@ -142,7 +142,7 @@ Transform:
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -17.5, y: -6.19999981, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 400002}
   - {fileID: 400000}
@@ -243,7 +243,7 @@ MonoBehaviour:
   MoveForce: 35
   JumpForce: 1000
   StompForce: 1000
-  ScaleAdjustment: .75
+  ScaleAdjustment: 1
   ScaleIterations: 5
   HUDPosition: {x: 15, y: 35}
   GroundDetector: {fileID: 100000}

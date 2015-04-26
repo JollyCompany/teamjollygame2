@@ -49,12 +49,14 @@ public class Hero : MonoBehaviour
 	private GameObject StunVisualInstance;
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
+	private float StartScale;
 
 	public Sprite ProjectileSprite;
 
 	void Start ()
 	{
 		this.HeroController = this.GetComponent<HeroController>();
+		this.StartScale = this.scale;
 
 		JollyDebug.Watch (this, "FacingRight", delegate ()
 		{
@@ -396,6 +398,7 @@ public class Hero : MonoBehaviour
 		this.ChannelVisualInstance.GetComponent<ChannelVisual>().ChannelTime = this.ChannelTime;
 		this.ChannelVisualInstance.GetComponent<ChannelVisual>().Hero = this;
 		this.ChannelVisualInstance.transform.localScale = new Vector3(this.ChannelVisualInstance.transform.localScale.x * this.scale, this.ChannelVisualInstance.transform.localScale.y * this.scale, this.ChannelVisualInstance.transform.localScale.z * this.scale);
+		this.ChannelVisualInstance.transform.parent = this.transform;
 	}
 
 	void StopChannelGrow()
@@ -448,14 +451,14 @@ public class Hero : MonoBehaviour
 
 	void SetGrowStage(int growStage)
 	{
-		this.scale = (this.ScaleAdjustment * growStage) + 1.0f;
+		this.scale = (this.ScaleAdjustment * growStage * this.StartScale) + this.StartScale;
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
-		rb.mass = (1.0f / this.scale);
+		rb.mass = (this.StartScale / this.scale);
 	}
 
 	public int GetGrowStage()
 	{
-		return (int)((this.scale - 1.0f) / ScaleAdjustment);
+		return (int)((this.scale - this.StartScale) / (ScaleAdjustment * this.StartScale));
 	}
 
 	/*
