@@ -36,6 +36,7 @@ public class SoundFX : MonoBehaviour
 	public AudioClip[] StompLandStun;
 	public AudioClip[] StompLandSquish;
 	public AudioClip[] StompLand;
+	public AudioClip[] Stunned;
 
 	public GameObject[] MusicTracks;
 
@@ -107,5 +108,10 @@ public class SoundFX : MonoBehaviour
 	public GameObject OnHeroStompLand(Hero hero)
 	{
 		return AudioSourceExt.PlayRandomClipAtPoint (this.StompLand, hero.xyz());
+	}
+
+	public GameObject OnHeroStunned(Hero hero)
+	{
+		return AudioSourceExt.PlayRandomClipAtPoint (this.Stunned, hero.xyz());
 	}
 }

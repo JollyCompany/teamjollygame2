@@ -14,10 +14,12 @@ public class Hero : MonoBehaviour
 	public GameObject ChannelLocator;
 	public GameObject CounterLocator;
 	public GameObject Projectile;
+	public GameObject StunVisual;
 	public GameObject ChannelVisual;
 	public GameObject MaxGrowthVisual;
 	public float ChannelTime;
 	public float RespawnTime;
+	public float StunTime;
 	public int PlayerIndex;
 	public GUIText HUDText;
 	public float TimeAtMaxSize;
@@ -34,10 +36,12 @@ public class Hero : MonoBehaviour
 
 	private bool Stomping = false;
 	private float RespawnTimeLeft = 0.0f;
+	private float TimeLeftStunned = 0.0f;
 	private float TimeSpentChanneling = 0.0f;
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
 	private GameObject MaxVisualInstance;
+	private GameObject StunVisualInstance;
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
 
@@ -111,7 +115,7 @@ public class Hero : MonoBehaviour
 
 		if (this.RespawnTimeLeft > 0)
 		{
-			string displayString = ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString();
+			string displayString = string.Format("Back in {0}s!", ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString());
 			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 1.25f) / 1920.0f * Screen.width, 0, textWidth, 40), displayString, style, Color.black, Color.white, 1);
 		}
 	}
@@ -285,9 +289,12 @@ public class Hero : MonoBehaviour
 				{
 					hitSomething = true;
 					grounded = true;
+					if (falling)
+					{
+						this.transform.Translate (Vector3.down * (raycastHit.distance - this.box.height/2));
+					}
 					falling = false;
-					this.transform.Translate (Vector3.down * (raycastHit.distance - this.box.height/2));
-					velocity = new Vector2 (velocity.x, 0);
+					velocity = new Vector2 (velocity.x, Mathf.Max (0.0f, velocity.y));
 					break;
 				}
 			}
@@ -333,9 +340,20 @@ public class Hero : MonoBehaviour
 	void OldFixedUpdate ()
 	{
 
+		if (this.TimeLeftStunned > 0.0f)
+		{
+			this.TimeLeftStunned -= Time.deltaTime;
 
-		bool canMove = !this.IsChanneling && !this.Stomping;
-		bool canAct = !this.IsChanneling && !this.Stomping;
+			if (this.TimeLeftStunned <= 0.0f)
+			{
+				this.StopStun();
+			}
+		}
+
+		if (this.HeroController.GetBiggerEnd)
+
+		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
+		bool canAct = !this.IsChanneling && !this.Stomping && !this.IsStunned();
 
 		JollyDebug.Watch (this, "CanMove", canMove);
 		JollyDebug.Watch (this, "CanAct", canAct);
@@ -370,6 +388,11 @@ public class Hero : MonoBehaviour
 						{
 							SoundFX.Instance.OnHeroStompLandSquish(this);
 							hero.Die(this);
+						}
+						else
+						{
+							SoundFX.Instance.OnHeroStompLandStun(this);
+							hero.Stun(this);
 						}
 					}
 				}
@@ -436,6 +459,34 @@ public class Hero : MonoBehaviour
 		this.RemoveMaxSizeVisual();
 	}
 
+	bool IsStunned()
+	{
+		return this.TimeLeftStunned > 0.0f;
+	}
+
+	void Stun(Hero attackingHero)
+	{
+		this.TimeLeftStunned = this.StunTime;
+
+		if (this.StunVisualInstance == null)
+		{
+			this.StunVisualInstance = (GameObject)GameObject.Instantiate(this.StunVisual, this.ChannelLocator.transform.position, Quaternion.identity);
+			this.StunVisualInstance.GetComponent<StunVisual>().Hero = this;
+			this.StunVisualInstance.transform.localScale = new Vector3(this.StunVisualInstance.transform.localScale.x * this.scale, this.StunVisualInstance.transform.localScale.y * this.scale, this.StunVisualInstance.transform.localScale.z * this.scale);
+			this.StunVisualInstance.transform.parent = this.transform;
+		}
+	}
+
+	void StopStun()
+	{
+		this.TimeLeftStunned = 0.0f;
+
+		if (this.StunVisualInstance)
+		{
+			Destroy(this.StunVisualInstance);
+		}
+	}
+
 	void StartChannelGrow()
 	{
 		this.TimeSpentChanneling = 0.0f;
@@ -477,7 +528,7 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.grounded;
+		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.grounded && !this.IsStunned ();
 	}
 
 	void Grow()
