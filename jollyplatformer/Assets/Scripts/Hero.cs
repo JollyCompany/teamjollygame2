@@ -5,9 +5,6 @@ using Jolly;
 
 public class Hero : MonoBehaviour
 {
-	public float MaxSpeed;
-	public float MoveForce;
-	public float JumpForce;
 	public float StompForce;
 	public float ScaleAdjustment;
 	public int ScaleIterations;
@@ -19,7 +16,6 @@ public class Hero : MonoBehaviour
 	public GameObject Projectile;
 	public GameObject ChannelVisual;
 	public GameObject MaxGrowthVisual;
-	public Camera RenderingCamera;
 	public float ChannelTime;
 	public float RespawnTime;
 	public int PlayerIndex;
@@ -150,24 +146,25 @@ public class Hero : MonoBehaviour
 		{
 			if (this.HeroController.Jump)
 			{
-				bool doubleJumped = false;
-
 				if (this.grounded || this.CanDoubleJump)
 				{
+					bool doubleJumped = false;
+
 					if (!this.grounded)
 					{
 						this.CanDoubleJump = false;
+						doubleJumped = true;
 					}
 					this.velocity = new Vector2 (this.velocity.x, this.Jump);
-				}
 
-				if (doubleJumped)
-				{
-					SoundFX.Instance.OnHeroDoubleJumped(this);
-				}
-				else
-				{
-					SoundFX.Instance.OnHeroJumped(this);
+					if (doubleJumped)
+					{
+						SoundFX.Instance.OnHeroDoubleJumped(this);
+					}
+					else
+					{
+						SoundFX.Instance.OnHeroJumped(this);
+					}
 				}
 			}
 		}
@@ -327,6 +324,7 @@ public class Hero : MonoBehaviour
 		this.transform.Translate (this.velocity * Time.deltaTime);
 	}
 
+	/*
 	void OldFixedUpdate ()
 	{
 
@@ -396,6 +394,7 @@ public class Hero : MonoBehaviour
 		}
 
 	}
+*/
 
 	void Flip ()
 	{
