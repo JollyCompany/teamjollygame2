@@ -75,7 +75,6 @@ public class Hero : MonoBehaviour
 	{
 		float iconSizeWidth = 50;
 		float heartSizeWidth = 35;
-		float textWidth = 100;
 
 		float xPosition = position.x;
 
@@ -93,13 +92,6 @@ public class Hero : MonoBehaviour
 
 		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
 		xPosition += (iconSizeWidth * 1.5f);
-
-		GUIStyle style = new GUIStyle("label");
-		style.font = this.HUDText.font;
-		style.fontSize = 20;
-		style.alignment = TextAnchor.UpperLeft;
-
-		this.DrawOutlineText(new Rect(xPosition / 1920.0f * Screen.width, 0, textWidth, 40), "00%", style, Color.black, Color.white, 1);
 	}
 
 	void Update ()
@@ -215,7 +207,7 @@ public class Hero : MonoBehaviour
 		this.scale = this.scale;
 	}
 
-	bool IsAlive()
+	public bool IsAlive()
 	{
 		return (this.RespawnTimeLeft <= 0.0f);
 	}
@@ -255,6 +247,10 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
+		if (this.PlayerIndex != 1)
+		{
+			return false;
+		}
 		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations;
 	}
 
@@ -274,7 +270,7 @@ public class Hero : MonoBehaviour
 		rb.mass = (1.0f / this.scale);
 	}
 
-	int GetGrowStage()
+	public int GetGrowStage()
 	{
 		return (int)((this.scale - 1.0f) / ScaleAdjustment);
 	}
