@@ -121,7 +121,7 @@ public class Hero : MonoBehaviour
 		if (this.RespawnTimeLeft > 0)
 		{
 			string displayString = string.Format("Back in {0}s!", ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString());
-			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 1.25f) / 1920.0f * Screen.width, 0, textWidth, 40), displayString, style, Color.black, Color.white, 1);
+			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 1.25f) / 1920.0f * Screen.width, 0, Screen.width, Screen.height), displayString, style, Color.black, Color.white, 1);
 		}
 	}
 
