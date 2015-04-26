@@ -344,8 +344,12 @@ public class Hero : MonoBehaviour
 								if (hero)
 								{
 									bounce = true;
+									SoundFX.Instance.OnHeroJumped(this);
 								}
-								SoundFX.Instance.OnHeroLanded(this);
+								else
+								{
+									SoundFX.Instance.OnHeroLanded(this);
+								}
 							}
 						}
 						Stomping = false;
