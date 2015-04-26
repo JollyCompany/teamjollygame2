@@ -86,4 +86,17 @@ public class HeroController : MonoBehaviour
 			return inputDevice == null ? Input.GetButtonUp ("Fire3") : inputDevice.Action3.WasReleased;
 		}
 	}
+
+	public bool GetResetGame
+	{
+		get
+		{
+			if (this.PlayerNumber == 1)
+			{
+				return Input.GetButtonUp ("Fire5");
+			}
+			return false;
+		}
+	}
+
 }

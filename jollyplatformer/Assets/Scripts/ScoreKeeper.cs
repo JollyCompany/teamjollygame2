@@ -65,6 +65,17 @@ public class ScoreKeeper : MonoBehaviour
 		}
 	}
 
+	public void ResetGame()
+	{
+		this.WinningHero = null;
+
+		Hero[] heroes = FindObjectsOfType(typeof(Hero)) as Hero[];
+		foreach (Hero hero in heroes)
+		{
+			hero.Reset();
+		}
+	}
+
 	void OnGUI()
 	{
 		GUIStyle style = new GUIStyle("label");
