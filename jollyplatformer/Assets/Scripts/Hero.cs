@@ -146,7 +146,10 @@ public class Hero : MonoBehaviour
 			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
 
 			this.RespawnTimeLeft -= Time.deltaTime;
-			this.Respawn ();
+			if (this.RespawnTimeLeft < 0.0)
+			{
+				this.Respawn ();
+			}
 		}
 
 		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
