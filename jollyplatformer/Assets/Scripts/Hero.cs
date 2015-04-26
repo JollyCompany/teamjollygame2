@@ -356,7 +356,12 @@ public class Hero : MonoBehaviour
 	{
 		this.TimeSpentChanneling = 0.0f;
 		this.IsChanneling = false;
-		Destroy(this.ChannelVisualInstance);
+
+		if (this.ChannelVisualInstance)
+		{
+			this.ChannelVisualInstance.GetComponent<ChannelVisual>().Stop();
+			Destroy(this.ChannelVisualInstance);
+		}
 	}
 
 	void AddMaxSizeVisual()

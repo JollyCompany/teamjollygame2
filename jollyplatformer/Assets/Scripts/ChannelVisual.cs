@@ -15,6 +15,13 @@ public class ChannelVisual : MonoBehaviour
 		this.soundObject = SoundFX.Instance.OnHeroGrowChannel(this.Hero);
 	}
 
+	public void Stop()
+	{
+		AudioSourceExt.StopClipOnObject(this.soundObject);
+		Destroy(this.soundObject);
+		Destroy(this.gameObject);
+	}
+
 	void Update ()
 	{
 		this.TimeRemaining -= Time.deltaTime;
@@ -22,8 +29,7 @@ public class ChannelVisual : MonoBehaviour
 
 		if (this.TimeRemaining < 0.0f)
 		{
-			AudioSourceExt.StopClipOnObject(this.soundObject);
-			Destroy (this.gameObject);
+			this.Stop();
 		}
 	}
 }
