@@ -67,20 +67,35 @@ public class ScoreKeeper : MonoBehaviour
 
 	void OnGUI()
 	{
-		int[] scoreLocations = { 242, 702, 1202, 1682 };
-		Hero[] heroes = FindObjectsOfType(typeof(Hero)) as Hero[];
-		foreach (Hero hero in heroes)
+		GUIStyle style = new GUIStyle("label");
+
+		if (this.WinningHero != null)
 		{
-			float textWidth = 100;
+			string[] names = { "GREEN", "BLUE", "RED", "YELLOW" };
 
-			GUIStyle style = new GUIStyle("label");
-			style.font = hero.HUDText.font;
-			style.fontSize = (int)(Screen.width * 0.027027f);
-			style.alignment = TextAnchor.UpperLeft;
+			style.font = this.WinningHero.HUDText.font;
+			style.fontSize = (int)(Screen.width * 0.1f);
+			style.alignment = TextAnchor.MiddleCenter;
+			string winningText = string.Format("{0} PLAYER WINS!", names[this.WinningHero.PlayerIndex - 1]);
+			this.DrawOutlineText(new Rect(0, 0, Screen.width, Screen.height), winningText, style, Color.black, Color.white, 1);
+		}
 
-			string displayString = Math.Min(100, (hero.TimeAtMaxSize / this.TimeToWin * 100.0f)).ToString("00.0") + "%";
+		Hero hero = this.FindWinningPlayer();
+		if (hero == null)
+		{
+			return;
+		}
 
-			this.DrawOutlineText(new Rect(scoreLocations[hero.PlayerIndex - 1] / 1920.0f * Screen.width, 0, textWidth, 40), displayString, style, Color.black, Color.white, 1);
+		style.font = hero.HUDText.font;
+		style.fontSize = (int)(Screen.width * 0.035);
+		style.alignment = TextAnchor.UpperCenter;
+		Vector3 screenPosition = Camera.main.WorldToScreenPoint(hero.CounterLocator.transform.position);
+
+		int timeLeft = (int)Math.Ceiling(this.TimeToWin - hero.TimeAtMaxSize);
+		if (timeLeft != 0)
+		{
+			string text = timeLeft.ToString();
+			hero.DrawOutlineText(new Rect(screenPosition.x - 50, Screen.height - screenPosition.y, 100, 40), text, style, Color.black, Color.white, 1);
 		}
 	}
 }
