@@ -302,7 +302,6 @@ public class Hero : MonoBehaviour
 							if (Stomping)
 							{
 								Hero hero = raycastHit.collider.gameObject.GetComponent<Hero>();
-								JollyDebug.Log ("Stomp lands: {0}", raycastHit);
 								if (null == hero)
 								{
 									SoundFX.Instance.OnHeroStompLand(this);
