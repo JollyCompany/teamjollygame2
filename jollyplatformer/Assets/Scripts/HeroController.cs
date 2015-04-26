@@ -52,6 +52,15 @@ public class HeroController : MonoBehaviour
 		}
 	}
 
+	public bool Stomping
+	{
+		get
+		{
+			InputDevice inputDevice = this.InputDevice;
+			return inputDevice == null ? Input.GetButton ("Fire4") : inputDevice.Action4.WasPressed;
+		}
+	}
+
 	public bool GetBiggerStart
 	{
 		get

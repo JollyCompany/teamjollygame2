@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using Jolly;
 
@@ -7,6 +8,7 @@ public class Hero : MonoBehaviour
 	public float MaxSpeed;
 	public float MoveForce;
 	public float JumpForce;
+	public float StompForce;
 	public float ScaleAdjustment;
 	public int ScaleIterations;
 	public Vector2 HUDPosition;
@@ -29,8 +31,10 @@ public class Hero : MonoBehaviour
 	private float TimeUntilNextProjectile = 0.0f;
 
 	private bool ShouldJump = false;
+	private bool ShouldStomp = false;
 	private bool FacingRight = true;
 
+	private bool Stomping = false;
 	private float RespawnTimeLeft = 0.0f;
 	private float TimeSpentChanneling = 0.0f;
 	private bool IsChanneling = false;
@@ -92,6 +96,19 @@ public class Hero : MonoBehaviour
 
 		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
 		xPosition += (iconSizeWidth * 1.5f);
+
+		float textWidth = 100;
+
+		GUIStyle style = new GUIStyle("label");
+		style.font = this.HUDText.font;
+		style.fontSize = 20;
+		style.alignment = TextAnchor.UpperLeft;
+
+		if (this.RespawnTimeLeft > 0)
+		{
+			string displayString = ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString();
+			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 0.25f) / 1920.0f * Screen.width, 0, textWidth, 40), displayString, style, Color.black, Color.white, 1);
+		}
 	}
 
 	void Update ()
@@ -109,7 +126,9 @@ public class Hero : MonoBehaviour
 
 		bool grounded = this.IsGrounded();
 		JollyDebug.Watch (this, "Grounded", grounded);
-		if (this.HeroController.Jump && (grounded || this.CanDoubleJump))
+		bool canJump = ((grounded || this.CanDoubleJump) && !this.Stomping);
+
+		if (this.HeroController.Jump && canJump)
 		{
 			this.ShouldJump = true;
 		}
@@ -117,6 +136,14 @@ public class Hero : MonoBehaviour
 		if (grounded)
 		{
 			this.CanDoubleJump = true;
+			this.Stomping = false;
+		}
+
+		JollyDebug.Watch (this, "Stomping", this.Stomping);
+
+		if (this.HeroController.Stomping && !grounded)
+		{
+			this.ShouldStomp = true;
 		}
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
@@ -146,8 +173,11 @@ public class Hero : MonoBehaviour
 
 	void FixedUpdate ()
 	{
-		bool canMove = !this.IsChanneling;
-		bool canAct = !this.IsChanneling;
+		bool canMove = !this.IsChanneling && !this.Stomping;
+		bool canAct = !this.IsChanneling && !this.Stomping;
+
+		JollyDebug.Watch (this, "CanMove", canMove);
+		JollyDebug.Watch (this, "CanAct", canAct);
 
 		float horizontal = this.HeroController.HorizontalMovementAxis;
 		if (!canMove)
@@ -164,6 +194,33 @@ public class Hero : MonoBehaviour
 			this.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign (this.GetComponent<Rigidbody2D>().velocity.x) * maxSpeed, this.GetComponent<Rigidbody2D>().velocity.y);
 		}
 
+		if (this.Stomping)
+		{
+			Vector3 direction = this.GroundDetector.transform.position - this.transform.position;
+			RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, direction, direction.magnitude);
+			Debug.Log(string.Format("Hits {0}", hits.Length));
+			if (hits.Length > 0)
+			{
+				for (int i = 0; i < hits.Length; ++i)
+				{
+					Hero hero = hits[i].collider.gameObject.GetComponent<Hero>();
+					if (hero && hero != this)
+					{
+						if (this.GetGrowStage() > hero.GetGrowStage())
+						{
+							hero.Die(this);
+						}
+					}
+				}
+			}
+
+			Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
+			if (rigidBody.velocity.y > -0.5f)
+			{
+				this.Stomping = false;
+			}
+		}
+
 		if (canAct)
 		{
 			if (this.ShouldJump)
@@ -173,8 +230,20 @@ public class Hero : MonoBehaviour
 					this.CanDoubleJump = false;
 				}
 
+				Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
+				rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
 				this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
 				this.ShouldJump = false;
+			}
+
+			if (this.ShouldStomp)
+			{
+				this.Stomping = true;
+
+				Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
+				rigidBody.velocity = new Vector2(0, 0);
+				this.GetComponent<Rigidbody2D>().AddForce (-Vector2.up * StompForce * 1/this.scale);
+				this.ShouldStomp = false;
 			}
 
 			if ((horizontal > 0 && !this.FacingRight) || (horizontal < 0 && this.FacingRight))
@@ -226,6 +295,9 @@ public class Hero : MonoBehaviour
 		this.RespawnTimeLeft = 5.0f;
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
+		this.Stomping = false;
+		this.ShouldStomp = false;
+		this.ShouldJump = false;
 	}
 
 	void StartChannelGrow()
