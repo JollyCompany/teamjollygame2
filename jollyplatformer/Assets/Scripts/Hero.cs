@@ -110,6 +110,18 @@ public class Hero : MonoBehaviour
 
 	void Update ()
 	{
+		if (this.RespawnTimeLeft > 0.0f)
+		{
+			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
+
+			this.RespawnTimeLeft -= Time.deltaTime;
+			if (this.RespawnTimeLeft <= 0.0f)
+			{
+				this.transform.position = new Vector3(0,0,0);
+				SoundFX.Instance.OnHeroRespawn(this);
+			}
+		}
+
 		bool canMove = !this.IsChanneling && !this.Stomping;
 		bool canAct = !this.IsChanneling && !this.Stomping;
 
@@ -117,7 +129,6 @@ public class Hero : MonoBehaviour
 		{
 			this.CanDoubleJump = true;
 		}
-
 
 		if (canMove)
 		{
@@ -182,17 +193,6 @@ public class Hero : MonoBehaviour
 
 	void OldUpdate ()
 	{
-		if (this.RespawnTimeLeft > 0.0f)
-		{
-			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
-
-			this.RespawnTimeLeft -= Time.deltaTime;
-			if (this.RespawnTimeLeft <= 0.0f)
-			{
-				this.transform.position = new Vector3(0,0,0);
-			SoundFX.Instance.OnHeroRespawn(this);
-			}
-		}
 
 		bool grounded = true;
 		bool justLanded = (grounded && !this.GroundedLastFrame);
@@ -228,30 +228,6 @@ public class Hero : MonoBehaviour
 		if (this.HeroController.Stomping && !grounded)
 		{
 			this.ShouldStomp = true;
-		}
-
-		this.TimeUntilNextProjectile -= Time.deltaTime;
-
-		if (this.HeroController.GetBiggerEnd)
-		{
-			this.StopChannelGrow();
-		}
-		else if (this.HeroController.GetBiggerHold)
-		{
-			if (this.IsChanneling)
-			{
-				this.TimeSpentChanneling += Time.deltaTime;
-
-				if (this.TimeSpentChanneling > this.ChannelTime)
-				{
-					this.StopChannelGrow();
-					this.Grow();
-				}
-			}
-			else if (this.CanGrow ())
-			{
-				this.StartChannelGrow();
-			}
 		}
 	}
 
@@ -428,7 +404,7 @@ public class Hero : MonoBehaviour
 
 	public void Hit (Hero attackingHero)
 	{
-		if (this == attackingHero)
+		if (this == attackingHero || !this.IsAlive())
 		{
 			return;
 		}
