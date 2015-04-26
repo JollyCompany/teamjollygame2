@@ -7,6 +7,7 @@ using Jolly;
 public class ScoreKeeper : MonoBehaviour
 {
 	public float TimeToWin;
+	public Hero WinningHero;
 
 	Hero FindWinningPlayer()
 	{
@@ -45,10 +46,19 @@ public class ScoreKeeper : MonoBehaviour
 
 	void Update()
 	{
+		if (this.WinningHero != null)
+		{
+			return;
+		}
+
 		Hero hero = this.FindWinningPlayer();
 		if (hero != null)
 		{
 			hero.TimeAtMaxSize += Time.deltaTime;
+			if (hero.TimeAtMaxSize >= this.TimeToWin)
+			{
+				this.WinningHero = hero;
+			}
 		}
 	}
 

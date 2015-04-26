@@ -36,6 +36,7 @@ public class Hero : MonoBehaviour
 	private float TimeSpentChanneling = 0.0f;
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
+	private bool CanDoubleJump;
 
 	public Sprite ProjectileSprite;
 
@@ -109,9 +110,14 @@ public class Hero : MonoBehaviour
 
 		bool grounded = this.IsGrounded();
 		JollyDebug.Watch (this, "Grounded", grounded);
-		if (this.HeroController.Jump && grounded)
+		if (this.HeroController.Jump && (grounded || this.CanDoubleJump))
 		{
 			this.ShouldJump = true;
+		}
+
+		if (grounded)
+		{
+			this.CanDoubleJump = true;
 		}
 
 		float viewportPointOfEdgeDetector = this.RenderingCamera.WorldToViewportPoint(this.ScreenEdgeDetector.transform.position).x;
@@ -175,6 +181,11 @@ public class Hero : MonoBehaviour
 		{
 			if (this.ShouldJump)
 			{
+				if (!this.IsGrounded())
+				{
+					this.CanDoubleJump = false;
+				}
+
 				this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
 				this.ShouldJump = false;
 			}
@@ -247,10 +258,6 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		if (this.PlayerIndex != 1)
-		{
-			return false;
-		}
 		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations;
 	}
 
