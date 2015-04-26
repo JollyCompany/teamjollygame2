@@ -25,7 +25,8 @@ public class ChannelVisual : MonoBehaviour
 	void Update ()
 	{
 		this.TimeRemaining -= Time.deltaTime;
-		this.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 360.0f * (this.TimeRemaining / this.ChannelTime)));
+		float yaw = 360.0f * (this.TimeRemaining / this.ChannelTime);
+		this.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, yaw));
 
 		if (this.TimeRemaining < 0.0f)
 		{
