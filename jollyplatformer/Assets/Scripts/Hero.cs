@@ -66,6 +66,7 @@ public class Hero : MonoBehaviour
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
 	private float StartScale;
+	private float StartWidth;
 	private float JumpForgivenessTimeLeft;
 
 	public Sprite[] BodySprites;
@@ -78,6 +79,7 @@ public class Hero : MonoBehaviour
 		this.GetComponentInChildren<SpriteRenderer>().sprite = this.BodySprites[this.HeroController.PlayerNumber];
 		this.ProjectileSprite = this.ProjectileSprites[this.HeroController.PlayerNumber];
 		this.StartScale = this.scale;
+		this.StartWidth = this.GetComponent<Collider2D>().bounds.size.x;
 		this.RespawnTimeCalculated = this.RespawnTime;
 
 		JollyDebug.Watch (this, "FacingRight", delegate ()
@@ -174,16 +176,53 @@ public class Hero : MonoBehaviour
 			}
 		}
 
+
 		this.JumpForgivenessTimeLeft -= Time.deltaTime;
 		JollyDebug.Watch (this, "JumpForgivenessTimeLeft", this.JumpForgivenessTimeLeft);
 
-		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
 		bool canAct = !this.IsChanneling && !this.Stomping && !this.IsStunned();
+
+
+		//bool canAct = !this.Stomping && !this.IsChanneling;
+		if (canAct)
+		{
+			JollyDebug.Watch (this, "TimeUntilNextProjectile", this.TimeUntilNextProjectile);
+			if (this.HeroController.Shooting && this.TimeUntilNextProjectile < 0.0f)
+			{
+				this.TimeUntilNextProjectile = this.ProjectileDelay;
+				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
+				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
+				projectile.GetComponent<Projectile>().OwnerHero = this;
+				projectile.transform.localScale = this.transform.localScale;
+				float launchVelocity = (this.FacingRight ? 1.0f : -1.0f) * this.ProjectileLaunchVelocity;
+				projectile.GetComponent<Projectile>().Velocity = new Vector2(launchVelocity, 0.0f);
+				SoundFX.Instance.OnHeroFire(this);
+				Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
+			}
+			
+			
+			bool controllerIssuedStomp = (this.HeroController.Jump && !this.CanDoubleJump);
+			if (controllerIssuedStomp && !this.CanJumpOffGround() && this.canStomp)
+			{
+				this.canStomp = false;
+				this.Stomping = true;
+				this.velocity = new Vector2(0.0f, this.StompSpeed);
+				SoundFX.Instance.OnHeroStompStart(this);
+			}
+		}
+		
+		if (this.HeroController.GetResetGame)
+		{
+			GameObject scoreKeeper = GameObject.Find("ScoreKeeper");
+			scoreKeeper.GetComponent<ScoreKeeper>().ResetGame();
+		}
 
 		if (this.grounded)
 		{
 			this.SetDoubleJumpAllowed();
 		}
+
+		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
 
 		if (canMove)
 		{
@@ -252,6 +291,7 @@ public class Hero : MonoBehaviour
 				this.velocity = new Vector2 (0.0f, this.velocity.y);
 			}
 		}
+
 	}
 
 	public float StaticMargin = 0.2f;
@@ -265,7 +305,6 @@ public class Hero : MonoBehaviour
 	public float Acceleration = 4.0f;
 	public float MaxNewSpeed = 150.0f;
 	public float GrowPopSpeed = 1.0f;
-	public int VerticalRays;
 	private bool canChannelGrow;
 
 	private Rect box;
@@ -313,10 +352,12 @@ public class Hero : MonoBehaviour
 			Vector3 endPoint   = new Vector3(this.box.xMax - this.StaticMargin, startPoint.y, startPoint.z);
 
             float distance = this.StaticMargin + (this.grounded ? this.StaticMargin : Mathf.Abs (this.velocity.y * this.FallingMargin * Time.fixedDeltaTime));
+			int verticalRays = Mathf.Max (3, Mathf.CeilToInt ((endPoint.x - startPoint.x) / this.StartWidth));
+			JollyDebug.Watch (this, "Vertical Rays", verticalRays);
 
-			for (int i = 0; i < this.VerticalRays; ++i)
+			for (int i = 0; i < verticalRays; ++i)
 			{
-				Vector2 origin = Vector2.Lerp (startPoint, endPoint, (float)i / (float)(VerticalRays - 1));
+				Vector2 origin = Vector2.Lerp (startPoint, endPoint, (float)i / (float)(verticalRays - 1));
 
 				for (int mask = 0; mask < 2; ++mask)
 				{
@@ -391,7 +432,7 @@ public class Hero : MonoBehaviour
 							velocity = new Vector2 (velocity.x, Mathf.Max (0.0f, velocity.y));
 						}
 
-						i = this.VerticalRays;
+						i = verticalRays;
 						break;
 					}
 				}
@@ -409,41 +450,6 @@ public class Hero : MonoBehaviour
 		}
 
 		this.TimeUntilNextProjectile -= Time.fixedDeltaTime;
-
-		bool canAct = !this.Stomping && !this.IsChanneling;
-		if (canAct)
-		{
-			JollyDebug.Watch (this, "TimeUntilNextProjectile", this.TimeUntilNextProjectile);
-			if (this.HeroController.Shooting && this.TimeUntilNextProjectile < 0.0f)
-			{
-				this.TimeUntilNextProjectile = this.ProjectileDelay;
-				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
-				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
-				projectile.GetComponent<Projectile>().OwnerHero = this;
-				projectile.transform.localScale = this.transform.localScale;
-				float launchVelocity = (this.FacingRight ? 1.0f : -1.0f) * this.ProjectileLaunchVelocity;
-				projectile.GetComponent<Projectile>().Velocity = new Vector2(launchVelocity, 0.0f);
-				SoundFX.Instance.OnHeroFire(this);
-				Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
-			}
-
-
-			bool controllerIssuedStomp = (this.HeroController.Jump && !this.CanDoubleJump);
-			if (controllerIssuedStomp && !this.CanJumpOffGround() && this.canStomp)
-			{
-				this.canStomp = false;
-				this.Stomping = true;
-				this.velocity = new Vector2(0.0f, this.StompSpeed);
-	            SoundFX.Instance.OnHeroStompStart(this);
-			}
-
-        }
-
-		if (this.HeroController.GetResetGame)
-		{
-			GameObject scoreKeeper = GameObject.Find("ScoreKeeper");
-			scoreKeeper.GetComponent<ScoreKeeper>().ResetGame();
-        }
 
 		this.transform.Translate (this.velocity * Time.fixedDeltaTime);
     }
