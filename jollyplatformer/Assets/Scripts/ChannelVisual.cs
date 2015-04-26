@@ -12,7 +12,7 @@ public class ChannelVisual : MonoBehaviour
 	void Start ()
 	{
 		this.TimeRemaining = this.ChannelTime;
-		GameObject soundObject = SoundFX.Instance.OnHeroGrowChannel(this.Hero);
+		this.soundObject = SoundFX.Instance.OnHeroGrowChannel(this.Hero);
 	}
 
 	void Update ()

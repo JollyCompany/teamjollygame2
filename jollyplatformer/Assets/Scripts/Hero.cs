@@ -22,6 +22,7 @@ public class Hero : MonoBehaviour
 	public GameObject MaxGrowthVisual;
 	public Camera RenderingCamera;
 	public float ChannelTime;
+	public float RespawnTime;
 	public int PlayerIndex;
 	public GUIText HUDText;
 	public float TimeAtMaxSize;
@@ -330,7 +331,7 @@ public class Hero : MonoBehaviour
 	void Die(Hero attackingHero)
 	{
 		SoundFX.Instance.OnHeroDies(this);
-		this.RespawnTimeLeft = 5.0f;
+		this.RespawnTimeLeft = this.RespawnTime;
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
 		this.Stomping = false;
