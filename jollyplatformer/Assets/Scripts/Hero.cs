@@ -119,9 +119,6 @@ public class Hero : MonoBehaviour
 			this.CanDoubleJump = true;
 		}
 
-		float viewportPointOfEdgeDetector = this.RenderingCamera.WorldToViewportPoint(this.ScreenEdgeDetector.transform.position).x;
-		this.AtEdgeOfScreen = viewportPointOfEdgeDetector < 0.0f || viewportPointOfEdgeDetector >= 1.0f;
-
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
 		if (this.HeroController.GetBiggerEnd)
