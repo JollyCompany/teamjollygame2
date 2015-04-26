@@ -259,7 +259,7 @@ MonoBehaviour:
   PlayerIndex: 1
   HUDText: {fileID: 13234722, guid: 05cb476ad74084b6c8b1f911d9292899, type: 2}
   TimeAtMaxSize: 0
-  ProjectileLaunchForce: {x: 500, y: 10}
+  ProjectileLaunchForce: {x: 700, y: 0}
   ProjectileDelay: 1
   ProjectileSprite: {fileID: 21300000, guid: 25913286cebd94ba88c9d642fc1ba721, type: 3}
 --- !u!114 &11400002

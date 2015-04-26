@@ -12,7 +12,7 @@ namespace Jolly
 			{
 				return default(T);
 			}
-			return array[Random.Range(0, array.Length-1)];
+			return array[RandomExt.RangeInclusive(0, array.Length-1)];
 		}
 
 		public static T Pick<T>(List<T> list)
@@ -21,7 +21,7 @@ namespace Jolly
 			{
 				return default(T);
 			}
-			return list[Random.Range(0, list.Count-1)];
+			return list[RandomExt.RangeInclusive(0, list.Count-1)];
 		}
 
 		public static void Shuffle<T>(ref T[] array)
@@ -38,13 +38,13 @@ namespace Jolly
 		public static int RangeInclusive(int min, int max)
 		{
 			JollyDebug.Assert (min <= max, "Random.RangeInclusive({0},{1}) - Invalid range", min, max);
-			return Random.Range (min, max);
+			return Random.Range (min, max+1);
 		}
 
 		public static int RangeExclusive(int min, int max)
 		{
 			JollyDebug.Assert (min < max, "Random.RangeExclusive({0},{1}) - Invalid range", min, max);
-			return Random.Range (min, max-1);
+			return Random.Range (min, max);
 		}
 
 		public static float RangeInclusive(float min, float max)
