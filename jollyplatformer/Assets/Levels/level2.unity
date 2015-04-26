@@ -585,7 +585,6 @@ MonoBehaviour:
   HeroAboutToWin:
   - {fileID: 8300000, guid: f9584d49a1cce4da182d636435e429f0, type: 3}
   - {fileID: 8300000, guid: 86f78aede8725423a9dc3f7a3f6aa804, type: 3}
-  MusicTracks: []
 --- !u!4 &243285036
 Transform:
   m_ObjectHideFlags: 0
@@ -1840,7 +1839,7 @@ GameObject:
   - 4: {fileID: 1114741411}
   - 82: {fileID: 1114741412}
   m_Layer: 0
-  m_Name: Music
+  m_Name: BackgroundMusic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2581,6 +2580,7 @@ MonoBehaviour:
   WinningHero: {fileID: 0}
   HeroAboutToWin: {fileID: 0}
   HeroAboutToWinSound: {fileID: 0}
+  GameWonSound: {fileID: 0}
 --- !u!1 &1486187055 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 188786, guid: 27ab4ff619d2c4e8db6ee852cd94d92a, type: 2}
