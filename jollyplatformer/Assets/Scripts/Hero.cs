@@ -29,10 +29,12 @@ public class Hero : MonoBehaviour
 	public GameObject StunVisual;
 	public GameObject ChannelVisual;
 	public GameObject MaxGrowthVisual;
+	public bool EnableDoubleJump;
 	public float ChannelTime;
 	public float RespawnTime;
 	public float RespawnTimeIncreasePerDeath;
 	public float StunTime;
+	public float JumpForgivenessTimeAmount;
 	public int PlayerIndex
 	{
 		get
@@ -64,6 +66,7 @@ public class Hero : MonoBehaviour
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
 	private float StartScale;
+	private float JumpForgivenessTimeLeft;
 
 	public Sprite[] BodySprites;
 	public Sprite[] ProjectileSprites;
@@ -106,6 +109,14 @@ public class Hero : MonoBehaviour
 		this.DrawHUD(this.HUDPosition);
 	}
 
+	void SetDoubleJumpAllowed()
+	{
+		if (this.EnableDoubleJump)
+		{
+			this.CanDoubleJump = true;
+		}
+	}
+
 	void DrawHUD(Vector2 position)
 	{
 		float iconSizeWidth = 50;
@@ -145,6 +156,11 @@ public class Hero : MonoBehaviour
 		}
 	}
 
+	bool CanJumpOffGround()
+	{
+		return (this.grounded || this.JumpForgivenessTimeLeft > 0.0f);
+	}
+
 	void Update ()
 	{
 		if (this.RespawnTimeLeft > 0.0f)
@@ -158,12 +174,15 @@ public class Hero : MonoBehaviour
 			}
 		}
 
+		this.JumpForgivenessTimeLeft -= Time.deltaTime;
+		JollyDebug.Watch (this, "JumpForgivenessTimeLeft", this.JumpForgivenessTimeLeft);
+
 		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
 		bool canAct = !this.IsChanneling && !this.Stomping && !this.IsStunned();
 
 		if (this.grounded)
 		{
-			this.CanDoubleJump = true;
+			this.SetDoubleJumpAllowed();
 		}
 
 		if (canMove)
@@ -179,11 +198,12 @@ public class Hero : MonoBehaviour
 		{
 			if (this.HeroController.Jump)
 			{
-				if (this.grounded || this.CanDoubleJump)
+				bool isJumpingOffGround = this.CanJumpOffGround();
+				if (isJumpingOffGround || this.CanDoubleJump)
 				{
 					bool doubleJumped = false;
 
-					if (!this.grounded)
+					if (!isJumpingOffGround)
 					{
 						this.CanDoubleJump = false;
 						doubleJumped = true;
@@ -353,6 +373,7 @@ public class Hero : MonoBehaviour
 							}
 						}
 						Stomping = false;
+						this.JumpForgivenessTimeLeft = this.JumpForgivenessTimeAmount;
 						grounded = true;
 						if (falling)
 						{
@@ -366,7 +387,7 @@ public class Hero : MonoBehaviour
 						}
 						else
 						{
-							this.CanDoubleJump = true;
+							this.SetDoubleJumpAllowed();
 							velocity = new Vector2 (velocity.x, Mathf.Max (0.0f, velocity.y));
 						}
 
@@ -406,7 +427,9 @@ public class Hero : MonoBehaviour
 				Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
 			}
 
-			if (this.HeroController.Stomping && !this.grounded && this.canStomp)
+
+			bool controllerIssuedStomp = (this.HeroController.Jump && !this.CanDoubleJump);
+			if (controllerIssuedStomp && !this.CanJumpOffGround() && this.canStomp)
 			{
 				this.canStomp = false;
 				this.Stomping = true;
