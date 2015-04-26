@@ -578,14 +578,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c63be38f7e00440d69c55d68aab146dc, type: 3}
   Stunned: []
   MatchWon:
-  - {fileID: 8300000, guid: 50a2731a78eb14d17a7e9196f5ec9b73, type: 3}
   - {fileID: 8300000, guid: c4aa4d8663829478e9f8780805ed4afa, type: 3}
   HeroReachedMaxSize:
   - {fileID: 8300000, guid: cffe169441d8e4231bc0e2c7b86979ad, type: 3}
   HeroAboutToWin:
-  - {fileID: 8300000, guid: f9584d49a1cce4da182d636435e429f0, type: 3}
   - {fileID: 8300000, guid: 86f78aede8725423a9dc3f7a3f6aa804, type: 3}
-  MusicTracks: []
 --- !u!4 &243285036
 Transform:
   m_ObjectHideFlags: 0
@@ -1840,7 +1837,7 @@ GameObject:
   - 4: {fileID: 1114741411}
   - 82: {fileID: 1114741412}
   m_Layer: 0
-  m_Name: Music
+  m_Name: BackgroundMusic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2581,6 +2578,7 @@ MonoBehaviour:
   WinningHero: {fileID: 0}
   HeroAboutToWin: {fileID: 0}
   HeroAboutToWinSound: {fileID: 0}
+  GameWonSound: {fileID: 0}
 --- !u!1 &1486187055 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 188786, guid: 27ab4ff619d2c4e8db6ee852cd94d92a, type: 2}

@@ -41,8 +41,6 @@ public class SoundFX : MonoBehaviour
 	public AudioClip[] HeroReachedMaxSize;
 	public AudioClip[] HeroAboutToWin;
 
-	public GameObject[] MusicTracks;
-
 	public GameObject OnHeroJumped(Hero hero)
 	{
 		return AudioSourceExt.PlayRandomClipAtPoint (this.Jump, hero.xyz());
@@ -131,5 +129,19 @@ public class SoundFX : MonoBehaviour
 	public GameObject OnHeroReachedMaxSize(Hero hero)
 	{
 		return AudioSourceExt.PlayRandomClipAtPoint (this.HeroReachedMaxSize, hero.xyz());
+	}
+
+	public void StartMusic()
+	{
+		GameObject backgroundMusic = GameObject.Find("BackgroundMusic");
+		AudioSource audioSource = backgroundMusic.GetComponent<AudioSource>();
+		audioSource.UnPause();
+	}
+
+	public void StopMusic()
+	{
+		GameObject backgroundMusic = GameObject.Find("BackgroundMusic");
+		AudioSource audioSource = backgroundMusic.GetComponent<AudioSource>();
+		audioSource.Pause();
 	}
 }
