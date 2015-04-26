@@ -606,7 +606,7 @@ public class Hero : MonoBehaviour
 	{
 		this.Die(null);
 		this.Respawn();
-		this.transform.position = this.SpawnPoint;
+		this.transform.localPosition = Vector3.zero;
     }
 
 	void Respawn()
