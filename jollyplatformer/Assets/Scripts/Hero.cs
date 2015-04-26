@@ -257,6 +257,11 @@ public class Hero : MonoBehaviour
 		{
 			grounded = false;
 		}
+
+		if ((this.velocity.x > 0 && !this.FacingRight) || (this.velocity.x < 0 && this.FacingRight))
+		{
+			this.Flip();
+		}
 	}
 
 
