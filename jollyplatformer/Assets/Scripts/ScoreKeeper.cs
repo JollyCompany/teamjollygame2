@@ -36,9 +36,12 @@ public class ScoreKeeper : MonoBehaviour
 			}
 		}
 
-		if (highestSize > 0 && highestPlayers.Count == 1)
+		if (highestPlayers.Count == 1)
 		{
-			return highestPlayers[0];
+			if (((Hero)highestPlayers[0]).ScaleIterations == highestSize)
+			{
+				return highestPlayers[0];
+			}
 		}
 
 		return null;
@@ -72,7 +75,7 @@ public class ScoreKeeper : MonoBehaviour
 
 			GUIStyle style = new GUIStyle("label");
 			style.font = hero.HUDText.font;
-			style.fontSize = 20;
+			style.fontSize = (int)(Screen.width * 0.027027f);
 			style.alignment = TextAnchor.UpperLeft;
 
 			string displayString = Math.Min(100, (hero.TimeAtMaxSize / this.TimeToWin * 100.0f)).ToString("00.0") + "%";

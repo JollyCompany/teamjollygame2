@@ -18,6 +18,7 @@ public class Hero : MonoBehaviour
 	public GameObject ChannelLocator;
 	public GameObject Projectile;
 	public GameObject ChannelVisual;
+	public GameObject MaxGrowthVisual;
 	public Camera RenderingCamera;
 	public float ChannelTime;
 	public int PlayerIndex;
@@ -39,6 +40,7 @@ public class Hero : MonoBehaviour
 	private float TimeSpentChanneling = 0.0f;
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
+	private GameObject MaxVisualInstance;
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
 
@@ -102,7 +104,7 @@ public class Hero : MonoBehaviour
 
 		GUIStyle style = new GUIStyle("label");
 		style.font = this.HUDText.font;
-		style.fontSize = 20;
+		style.fontSize = (int)(Screen.width * 0.027027f);
 		style.alignment = TextAnchor.UpperLeft;
 
 		if (this.RespawnTimeLeft > 0)
@@ -114,6 +116,7 @@ public class Hero : MonoBehaviour
 
 	void Update ()
 	{
+		Debug.Log(Screen.width);
 		if (this.RespawnTimeLeft > 0.0f)
 		{
 			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
@@ -321,7 +324,7 @@ public class Hero : MonoBehaviour
 		this.Die(attackingHero);
 	}
 
-	void Die (Hero attackingHero)
+	void Die(Hero attackingHero)
 	{
 		SoundFX.Instance.OnHeroDies(this);
 		this.RespawnTimeLeft = 5.0f;
@@ -330,6 +333,9 @@ public class Hero : MonoBehaviour
 		this.Stomping = false;
 		this.ShouldStomp = false;
 		this.ShouldJump = false;
+
+		this.TimeAtMaxSize = 0;
+		this.RemoveMaxSizeVisual();
 	}
 
 	void StartChannelGrow()
@@ -349,6 +355,18 @@ public class Hero : MonoBehaviour
 		Destroy(this.ChannelVisualInstance);
 	}
 
+	void AddMaxSizeVisual()
+	{
+		this.MaxVisualInstance = (GameObject)GameObject.Instantiate(this.MaxGrowthVisual, this.ChannelLocator.transform.position, Quaternion.identity);
+		this.MaxVisualInstance.transform.localScale = new Vector3(this.MaxVisualInstance.transform.localScale.x * this.scale, this.MaxVisualInstance.transform.localScale.y * this.scale, this.MaxVisualInstance.transform.localScale.z * this.scale);
+		this.MaxVisualInstance.transform.parent = this.transform;
+	}
+
+	void RemoveMaxSizeVisual()
+	{
+		Destroy(this.MaxVisualInstance);
+	}
+
 	bool CanGrow()
 	{
 		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.IsGrounded();
@@ -360,12 +378,16 @@ public class Hero : MonoBehaviour
 		{
 			SetGrowStage(this.GetGrowStage() + 1);
 			SoundFX.Instance.OnHeroGrowComplete(this);
+
+			if (this.GetGrowStage() == this.ScaleIterations)
+			{
+				this.AddMaxSizeVisual();
+			}
 		}
 	}
 
 	void SetGrowStage(int growStage)
 	{
-
 		this.scale = (this.ScaleAdjustment * growStage) + 1.0f;
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
 		rb.mass = (1.0f / this.scale);
