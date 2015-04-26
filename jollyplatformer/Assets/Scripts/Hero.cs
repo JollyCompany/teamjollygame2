@@ -497,7 +497,14 @@ public class Hero : MonoBehaviour
 		GameObject projectileExplosion = (GameObject)GameObject.Instantiate(attackingHero.ProjectileExplosion, this.transform.position, Quaternion.identity);
 		projectileExplosion.GetComponent<SpriteRenderer>().sprite = attackingHero.ProjectileExplosionSprite;
 
-		this.Die(attackingHero);
+		if (this.GetComponent<ShieldBuff>().enabled)
+		{
+			this.GetComponent<ShieldBuff>().enabled = false;
+		}
+		else
+		{
+			this.Die(attackingHero);
+		}
 	}
 
 	void Die(Hero attackingHero)

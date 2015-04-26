@@ -6,7 +6,8 @@ public class Pickup : MonoBehaviour
 {
 	public enum Type
 	{
-		GrowInstantly
+		GrowInstantly,
+		Shield
 	}
 
 	public Type PickupType;
@@ -36,7 +37,14 @@ public class Pickup : MonoBehaviour
 		{
 			return;
 		}
-		hero.Grow(true);
+		if (this.PickupType == Type.Shield)
+		{
+			ShieldBuff.AddToHero (hero);
+		}
+		else
+		{
+			hero.Grow(true);
+		}
 		GameObject.Destroy (this.gameObject);
 	}
 }
