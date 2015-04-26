@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Jolly;
 
 public class Pickup : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class Pickup : MonoBehaviour
 	{
 		if (Time.time > this.ExpirationTime)
 		{
-			GameObject.Destroy (this);
+			GameObject.Destroy (this.gameObject);
 			return;
 		}
 
@@ -30,12 +31,12 @@ public class Pickup : MonoBehaviour
 
 	void OnTriggerEnter2D (Collider2D other)
 	{
-		var hero = other.GetComponent<Hero>();
+		var hero = other.gameObject.GetComponent<Hero>();
 		if (null == hero)
 		{
-			hero.Grow();
 			return;
 		}
-		GameObject.Destroy (this);
+		hero.Grow(true);
+		GameObject.Destroy (this.gameObject);
 	}
 }
