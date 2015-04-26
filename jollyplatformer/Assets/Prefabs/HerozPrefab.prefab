@@ -230,7 +230,7 @@ MonoBehaviour:
   ProjectileEmitLocator: {fileID: 115056}
   ChannelLocator: {fileID: 132850}
   CounterLocator: {fileID: 118530}
-  Projectile: {fileID: 100000, guid: bbfe1742032334cdca96228680379636, type: 2}
+  Projectile: {fileID: 100000, guid: acae6b6e1eff0451cb8f0c276d858f27, type: 2}
   ProjectileExplosion: {fileID: 100000, guid: c1afa07dbac014154a2edac72a5cd596, type: 2}
   StunVisual: {fileID: 100000, guid: 13a62619e9de440989955c15fd635069, type: 2}
   ChannelVisual: {fileID: 100000, guid: b92ba7190135c40e0818e81d8b7878ff, type: 2}
