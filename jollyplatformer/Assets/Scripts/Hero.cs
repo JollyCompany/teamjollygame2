@@ -197,6 +197,7 @@ public class Hero : MonoBehaviour
 				projectile.GetComponent<Rigidbody2D>().AddForce(launchForce);
 			}
 		}
+
 	}
 
 	void Flip ()
@@ -267,5 +268,26 @@ public class Hero : MonoBehaviour
 	public int GetGrowStage()
 	{
 		return (int)((this.scale - 1.0f) / ScaleAdjustment);
+	}
+
+	/*
+	void OnCollisionEnter2D(Collision2D coll)
+	{
+		Debug.Log ("Collision Enter 2D " + coll.collider.bounds.ToString() + " " + Random.value);
+	}
+
+	void OnCollisionExit2D(Collision2D coll)
+	{
+		Debug.Log ("Collision Exit 2D " + coll.collider.bounds.ToString() + " " + Random.value);
+	}*/
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		this.gameObject.layer = LayerMask.NameToLayer ("IgnorePlatforms");
+	}
+
+	void OnTriggerExit2D(Collider2D other)
+	{
+		this.gameObject.layer = LayerMask.NameToLayer ("Default");
 	}
 }

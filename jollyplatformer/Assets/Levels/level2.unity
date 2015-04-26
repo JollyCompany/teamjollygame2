@@ -620,6 +620,7 @@ GameObject:
   - 4: {fileID: 182252960}
   - 212: {fileID: 182252961}
   - 61: {fileID: 182252962}
+  - 61: {fileID: 182252963}
   m_Layer: 8
   m_Name: Platform2
   m_TagString: Untagged
@@ -686,6 +687,19 @@ BoxCollider2D:
   m_Offset: {x: -2.08292961, y: 0}
   serializedVersion: 2
   m_Size: {x: 6.25786495, y: .699999988}
+--- !u!61 &182252963
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 182252959}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: -2.08400536, y: -.239999995}
+  serializedVersion: 2
+  m_Size: {x: 7.07999992, y: 1.08000004}
 --- !u!1 &199403721
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,6 +1744,7 @@ GameObject:
   - 4: {fileID: 635955179}
   - 212: {fileID: 635955180}
   - 61: {fileID: 635955181}
+  - 61: {fileID: 635955182}
   m_Layer: 8
   m_Name: Platform4
   m_TagString: Untagged
@@ -1796,6 +1811,19 @@ BoxCollider2D:
   m_Offset: {x: -2.08293056, y: 0}
   serializedVersion: 2
   m_Size: {x: 6.25110817, y: .699999988}
+--- !u!61 &635955182
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 635955178}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: -2.08400536, y: -.239999995}
+  serializedVersion: 2
+  m_Size: {x: 7.07999992, y: 1.08000004}
 --- !u!1 &642403555
 GameObject:
   m_ObjectHideFlags: 0
@@ -2111,6 +2139,7 @@ GameObject:
   - 4: {fileID: 696198134}
   - 212: {fileID: 696198135}
   - 61: {fileID: 696198136}
+  - 61: {fileID: 696198137}
   m_Layer: 8
   m_Name: Platform3
   m_TagString: Untagged
@@ -2177,6 +2206,19 @@ BoxCollider2D:
   m_Offset: {x: -2.08293009, y: 0}
   serializedVersion: 2
   m_Size: {x: 6.25110149, y: .699999988}
+--- !u!61 &696198137
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 696198133}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: -2.08400536, y: -.239999995}
+  serializedVersion: 2
+  m_Size: {x: 7.07999992, y: 1.08000004}
 --- !u!1 &732061291
 GameObject:
   m_ObjectHideFlags: 0
@@ -3130,6 +3172,10 @@ Prefab:
       propertyPath: HUDPosition.y
       value: 35
       objectReference: {fileID: 0}
+    - target: {fileID: 5000000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
   m_IsPrefabParent: 0
@@ -3530,6 +3576,7 @@ GameObject:
   - 4: {fileID: 1265478067}
   - 212: {fileID: 1265478068}
   - 61: {fileID: 1265478069}
+  - 61: {fileID: 1265478070}
   m_Layer: 8
   m_Name: Platform5
   m_TagString: Untagged
@@ -3596,6 +3643,19 @@ BoxCollider2D:
   m_Offset: {x: -2.08400536, y: 0}
   serializedVersion: 2
   m_Size: {x: 6.25324249, y: .699999988}
+--- !u!61 &1265478070
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1265478066}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: -2.08400536, y: -.239999995}
+  serializedVersion: 2
+  m_Size: {x: 7.07999992, y: 1.08000004}
 --- !u!1 &1287816824
 GameObject:
   m_ObjectHideFlags: 0
@@ -3852,6 +3912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeToWin: 20
+  WinningHero: {fileID: 0}
 --- !u!1 &1446188482
 GameObject:
   m_ObjectHideFlags: 0
@@ -5108,6 +5169,7 @@ GameObject:
   - 4: {fileID: 1777495530}
   - 212: {fileID: 1777495529}
   - 61: {fileID: 1777495528}
+  - 61: {fileID: 1777495531}
   m_Layer: 8
   m_Name: Platform1
   m_TagString: Untagged
@@ -5174,6 +5236,19 @@ Transform:
   - {fileID: 269726920}
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!61 &1777495531
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1777495527}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: -2.08400536, y: -.239999995}
+  serializedVersion: 2
+  m_Size: {x: 7.07999992, y: 1.08000004}
 --- !u!1 &1791604298
 GameObject:
   m_ObjectHideFlags: 0
