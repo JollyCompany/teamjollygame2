@@ -403,6 +403,7 @@ public class Hero : MonoBehaviour
 				float launchVelocity = (this.FacingRight ? 1.0f : -1.0f) * this.ProjectileLaunchVelocity;
 				projectile.GetComponent<Projectile>().Velocity = new Vector2(launchVelocity, 0.0f);
 				SoundFX.Instance.OnHeroFire(this);
+				Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
 			}
 
 			if (this.HeroController.Stomping && !this.grounded && this.canStomp)
