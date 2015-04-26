@@ -265,7 +265,8 @@ public class Hero : MonoBehaviour
 		}
 	}
 
-	public float Margin = 0.2f;
+	public float StaticMargin = 0.2f;
+	public float FallingMargin = 0.5f;
 	public float Gravity = 6.0f;
 	public float MaxFall = 200.0f;
 	public float Jump = 200.0f;
@@ -277,6 +278,7 @@ public class Hero : MonoBehaviour
 	private Vector2 velocity = Vector2.zero;
 	private bool falling = false;
 	private bool grounded = false;
+	private bool wasGrounded = false;
 	private int groundMask;
 
 	void FixedUpdate ()
@@ -295,24 +297,29 @@ public class Hero : MonoBehaviour
 		RaycastHit2D raycastHit;
 		if (grounded || falling)
 		{
-			Vector3 startPoint = new Vector3(this.box.xMin + this.Margin, this.box.center.y, this.transform.position.z);
-			Vector3 endPoint   = new Vector3(this.box.xMax - this.Margin, this.box.center.y, this.transform.position.z);
+			Vector3 startPoint = new Vector3(this.box.xMin + this.StaticMargin, this.box.yMin + this.StaticMargin, this.transform.position.z);
+			Vector3 endPoint   = new Vector3(this.box.xMax - this.StaticMargin, startPoint.y, startPoint.z);
 
-			float distance = this.box.height / 2 + (this.grounded ? this.Margin : Mathf.Abs (this.velocity.y * Time.fixedDeltaTime));
+			float distance = this.StaticMargin + (this.grounded ? this.StaticMargin : Mathf.Abs (this.velocity.y * Time.fixedDeltaTime));
 
 			for (int i = 0; i < this.VerticalRays; ++i)
 			{
 				Vector2 origin = Vector2.Lerp (startPoint, endPoint, (float)i / (float)(VerticalRays - 1));
 
-				raycastHit = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << this.groundMask);
+				//raycastHit = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << this.groundMask);
+				raycastHit = Physics2D.Linecast(origin, origin - new Vector2(0.0f, distance), 1 << this.groundMask);
 
 				if (raycastHit.collider != null)
 				{
 					hitSomething = true;
+					if (!grounded)
+					{
+						SoundFX.Instance.OnHeroLanded(this);
+					}
 					grounded = true;
 					if (falling)
 					{
-						this.transform.Translate (Vector3.down * (raycastHit.distance - this.box.height/2));
+						this.transform.Translate (Vector3.down * (raycastHit.distance - this.StaticMargin));
 					}
 					falling = false;
 					velocity = new Vector2 (velocity.x, Mathf.Max (0.0f, velocity.y));
