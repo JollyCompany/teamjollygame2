@@ -95,7 +95,7 @@ public class ScoreKeeper : MonoBehaviour
 		if (timeLeft != 0)
 		{
 			string text = timeLeft.ToString();
-			hero.DrawOutlineText(new Rect(screenPosition.x - 50, Screen.height - screenPosition.y, 100, 40), text, style, Color.black, Color.white, 1);
+			hero.DrawOutlineText(new Rect(screenPosition.x - 50, Screen.height - screenPosition.y, 100, Screen.height), text, style, Color.black, Color.white, 1);
 		}
 	}
 }
