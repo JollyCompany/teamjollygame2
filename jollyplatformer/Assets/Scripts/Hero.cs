@@ -5,7 +5,6 @@ using Jolly;
 
 public class Hero : MonoBehaviour
 {
-	public float StompForce;
 	public float ScaleAdjustment;
 	public int ScaleIterations;
 	public Vector2 HUDPosition
@@ -50,7 +49,6 @@ public class Hero : MonoBehaviour
 	private float TimeUntilNextProjectile = 0.0f;
 
 	private bool ShouldJump = false;
-	private bool ShouldStomp = false;
 	private bool FacingRight = true;
 
 	private bool Stomping = false;
@@ -155,8 +153,8 @@ public class Hero : MonoBehaviour
 			}
 		}
 
-		bool canMove = !this.IsChanneling && !this.Stomping;
-		bool canAct = !this.IsChanneling && !this.Stomping;
+		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
+		bool canAct = !this.IsChanneling && !this.Stomping && !this.IsStunned();
 
 		if (this.grounded)
 		{
@@ -199,69 +197,27 @@ public class Hero : MonoBehaviour
 			}
 		}
 
+		if (this.IsChanneling && this.HeroController.GetBiggerEnd)
 		{
-			if (this.HeroController.GetBiggerEnd)
+			this.StopChannelGrow();
+		}
+		else if (this.HeroController.GetBiggerHold)
+		{
+			if (this.IsChanneling)
 			{
-				this.StopChannelGrow();
-			}
-			else if (this.HeroController.GetBiggerHold)
-			{
-				if (this.IsChanneling)
-				{
-					this.TimeSpentChanneling += Time.deltaTime;
+				this.TimeSpentChanneling += Time.deltaTime;
 
-					if (this.TimeSpentChanneling > this.ChannelTime)
-					{
-						this.StopChannelGrow();
-						this.Grow();
-					}
-				}
-				else if (this.CanGrow ())
+				if (this.TimeSpentChanneling > this.ChannelTime)
 				{
-					this.StartChannelGrow();
-					this.velocity = new Vector2 (0.0f, this.velocity.y);
+					this.StopChannelGrow();
+					this.Grow();
 				}
 			}
-		}
-	}
-
-	void OldUpdate ()
-	{
-
-		bool grounded = true;
-		bool justLanded = (grounded && !this.GroundedLastFrame);
-		this.GroundedLastFrame = grounded;
-		JollyDebug.Watch (this, "Grounded", grounded);
-		bool canJump = ((grounded || this.CanDoubleJump) && !this.Stomping);
-
-		if (justLanded)
-		{
-			if (this.Stomping)
+			else if (canAct && this.CanGrow ())
 			{
-				SoundFX.Instance.OnHeroStompLand(this);
+				this.StartChannelGrow();
+				this.velocity = new Vector2 (0.0f, this.velocity.y);
 			}
-			else
-			{
-				SoundFX.Instance.OnHeroLanded(this);
-			}
-		}
-
-		if (this.HeroController.Jump && canJump)
-		{
-			this.ShouldJump = true;
-		}
-
-		if (grounded)
-		{
-			this.CanDoubleJump = true;
-			this.Stomping = false;
-		}
-
-		JollyDebug.Watch (this, "Stomping", this.Stomping);
-
-		if (this.HeroController.Stomping && !grounded)
-		{
-			this.ShouldStomp = true;
 		}
 	}
 
@@ -269,6 +225,9 @@ public class Hero : MonoBehaviour
 	public float FallingMargin = 0.5f;
 	public float Gravity = 6.0f;
 	public float MaxFall = 200.0f;
+	public float StompSpeed;
+	public float StompGravity = 6.0f;
+	public float MaxStompFall;
 	public float Jump = 200.0f;
 	public float Acceleration = 4.0f;
 	public float MaxNewSpeed = 150.0f;
@@ -278,7 +237,6 @@ public class Hero : MonoBehaviour
 	private Vector2 velocity = Vector2.zero;
 	private bool falling = false;
 	private bool grounded = false;
-	private bool wasGrounded = false;
 	private int groundMask;
 
 	void FixedUpdate ()
@@ -286,9 +244,27 @@ public class Hero : MonoBehaviour
 		var bounds = this.GetComponent<Collider2D>().bounds;
 		this.box = Rect.MinMaxRect (bounds.min.x, bounds.min.y, bounds.max.x, bounds.max.y);
 
+		if (this.TimeLeftStunned > 0.0f)
+		{
+			this.TimeLeftStunned -= Time.fixedDeltaTime;
+			
+			if (this.TimeLeftStunned <= 0.0f)
+            {
+                this.StopStun();
+            }
+        }
+
+
 		if (!this.grounded)
 		{
-			this.velocity = new Vector2(this.velocity.x, Mathf.Max (this.velocity.y - this.Gravity, -this.MaxFall));
+			if (this.Stomping)
+			{
+				this.velocity = new Vector2(this.velocity.x, Mathf.Max (this.velocity.y - this.StompGravity, -this.MaxStompFall));
+			}
+			else
+			{
+				this.velocity = new Vector2(this.velocity.x, Mathf.Max (this.velocity.y - this.Gravity, -this.MaxFall));
+			}
 		}
 
 		this.falling = this.velocity.y < 0;
@@ -300,30 +276,78 @@ public class Hero : MonoBehaviour
 			Vector3 startPoint = new Vector3(this.box.xMin + this.StaticMargin, this.box.yMin + this.StaticMargin, this.transform.position.z);
 			Vector3 endPoint   = new Vector3(this.box.xMax - this.StaticMargin, startPoint.y, startPoint.z);
 
-			float distance = this.StaticMargin + (this.grounded ? this.StaticMargin : Mathf.Abs (this.velocity.y * Time.fixedDeltaTime));
+            float distance = this.StaticMargin + (this.grounded ? this.StaticMargin : Mathf.Abs (this.velocity.y * this.FallingMargin * Time.fixedDeltaTime));
 
 			for (int i = 0; i < this.VerticalRays; ++i)
 			{
 				Vector2 origin = Vector2.Lerp (startPoint, endPoint, (float)i / (float)(VerticalRays - 1));
 
-				//raycastHit = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << this.groundMask);
-				raycastHit = Physics2D.Linecast(origin, origin - new Vector2(0.0f, distance), 1 << this.groundMask);
-
-				if (raycastHit.collider != null)
+				for (int mask = 0; mask < 2; ++mask)
 				{
-					hitSomething = true;
-					if (!grounded)
+					if (mask == 0)
 					{
-						SoundFX.Instance.OnHeroLanded(this);
+						int oldLayer = this.gameObject.layer;
+						this.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+						raycastHit = Physics2D.Linecast(origin, origin - new Vector2(0.0f, distance), (1<< LayerMask.NameToLayer("Default")));
+						this.gameObject.layer = oldLayer;
 					}
-					grounded = true;
-					if (falling)
+					else
 					{
-						this.transform.Translate (Vector3.down * (raycastHit.distance - this.StaticMargin));
+						raycastHit = Physics2D.Linecast(origin, origin - new Vector2(0.0f, distance), (1 << this.groundMask));
 					}
-					falling = false;
-					velocity = new Vector2 (velocity.x, Mathf.Max (0.0f, velocity.y));
-					break;
+
+
+					if (raycastHit.collider != null)
+					{
+						bool bounce = false;
+						hitSomething = true;
+						if (!grounded)
+						{
+							if (Stomping)
+							{
+								Hero hero = raycastHit.collider.gameObject.GetComponent<Hero>();
+								JollyDebug.Log ("Stomp lands: {0}", raycastHit);
+								if (null == hero)
+								{
+									SoundFX.Instance.OnHeroStompLand(this);
+								}
+								else if (this.GetGrowStage() > hero.GetGrowStage())
+								{
+									SoundFX.Instance.OnHeroStompLandSquish(this);
+									hero.Die(this);
+								}
+								else
+								{
+									SoundFX.Instance.OnHeroStompLandStun(this);
+									hero.Stun(this);
+									bounce = true;
+								}
+							}
+							else
+							{
+								SoundFX.Instance.OnHeroLanded(this);
+							}
+						}
+						Stomping = false;
+						grounded = true;
+						this.CanDoubleJump = true;
+						if (falling)
+						{
+							this.transform.Translate (Vector3.down * (raycastHit.distance - this.StaticMargin));
+						}
+						falling = false;
+						if (bounce)
+						{
+							velocity = new Vector2 (velocity.x, this.Jump);
+						}
+						else
+						{
+							velocity = new Vector2 (velocity.x, Mathf.Max (0.0f, velocity.y));
+						}
+
+						i = this.VerticalRays;
+						break;
+					}
 				}
 			}
 		}
@@ -340,7 +364,7 @@ public class Hero : MonoBehaviour
 
 		this.TimeUntilNextProjectile -= Time.fixedDeltaTime;
 
-		bool canAct = true;
+		bool canAct = !this.Stomping && !this.IsChanneling;
 		if (canAct)
 		{
 			JollyDebug.Watch (this, "TimeUntilNextProjectile", this.TimeUntilNextProjectile);
@@ -355,8 +379,16 @@ public class Hero : MonoBehaviour
 				projectile.GetComponent<Projectile>().Velocity = new Vector2(launchVelocity, 0.0f);
 				SoundFX.Instance.OnHeroFire(this);
 			}
-		}
-	}
+
+			if (this.HeroController.Stomping && !this.grounded)
+			{
+				this.Stomping = true;
+				this.velocity = new Vector2(0.0f, this.StompSpeed);
+	            SoundFX.Instance.OnHeroStompStart(this);
+			}
+            
+        }
+    }
 
 
 	void LateUpdate ()
@@ -482,7 +514,6 @@ public class Hero : MonoBehaviour
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
 		this.Stomping = false;
-		this.ShouldStomp = false;
 		this.ShouldJump = false;
 
 		this.TimeAtMaxSize = 0;
