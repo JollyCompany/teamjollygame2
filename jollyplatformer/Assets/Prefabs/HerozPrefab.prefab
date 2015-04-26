@@ -262,6 +262,7 @@ MonoBehaviour:
   Jump: 20
   Acceleration: 4
   MaxNewSpeed: 10
+  GrowPopSpeed: 3
   VerticalRays: 3
 --- !u!212 &21277528
 SpriteRenderer:
