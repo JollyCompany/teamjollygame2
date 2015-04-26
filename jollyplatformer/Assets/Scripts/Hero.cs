@@ -262,6 +262,30 @@ public class Hero : MonoBehaviour
 		{
 			this.Flip();
 		}
+
+		this.TimeUntilNextProjectile -= Time.fixedDeltaTime;
+
+		bool canAct = true;
+		if (canAct)
+		{
+			JollyDebug.Watch (this, "TimeUntilNextProjectile", this.TimeUntilNextProjectile);
+			if (this.HeroController.Shooting && this.TimeUntilNextProjectile < 0.0f)
+			{
+				this.TimeUntilNextProjectile = this.ProjectileDelay;
+				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
+				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
+				projectile.GetComponent<Projectile>().OwnerHero = this;
+				projectile.transform.localScale = this.transform.localScale;
+				Vector2 launchForce = this.ProjectileLaunchForce;
+				if (!this.FacingRight)
+				{
+					launchForce = new Vector2(launchForce.x * -1.0f, launchForce.y);
+				}
+				projectile.GetComponent<Rigidbody2D>().AddForce(launchForce);
+
+				SoundFX.Instance.OnHeroFire(this);
+			}
+		}
 	}
 
 
