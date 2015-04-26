@@ -225,6 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ScaleAdjustment: .75
   ScaleIterations: 5
+  SpawnMagnitude: 20
   GroundDetector: {fileID: 129692}
   ProjectileEmitLocator: {fileID: 115056}
   ChannelLocator: {fileID: 132850}
