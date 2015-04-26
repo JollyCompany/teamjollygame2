@@ -26,7 +26,7 @@ public class Hero : MonoBehaviour
 
 	private HeroController HeroController;
 
-	public Vector2 ProjectileLaunchForce;
+	public float ProjectileLaunchVelocity;
 	public float ProjectileDelay;
 	private float TimeUntilNextProjectile = 0.0f;
 
@@ -276,13 +276,8 @@ public class Hero : MonoBehaviour
 				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
 				projectile.GetComponent<Projectile>().OwnerHero = this;
 				projectile.transform.localScale = this.transform.localScale;
-				Vector2 launchForce = this.ProjectileLaunchForce;
-				if (!this.FacingRight)
-				{
-					launchForce = new Vector2(launchForce.x * -1.0f, launchForce.y);
-				}
-				projectile.GetComponent<Rigidbody2D>().AddForce(launchForce);
-
+				float launchVelocity = (this.FacingRight ? 1.0f : -1.0f) * this.ProjectileLaunchVelocity;
+				projectile.GetComponent<Projectile>().Velocity = new Vector2(launchVelocity, 0.0f);
 				SoundFX.Instance.OnHeroFire(this);
 			}
 		}
@@ -389,22 +384,6 @@ public class Hero : MonoBehaviour
 				this.Flip();
 			}
 
-			if (this.HeroController.Shooting && this.TimeUntilNextProjectile < 0.0f)
-			{
-				this.TimeUntilNextProjectile = this.ProjectileDelay;
-				GameObject projectile = (GameObject)GameObject.Instantiate(this.Projectile, this.ProjectileEmitLocator.transform.position, Quaternion.identity);
-				projectile.GetComponent<SpriteRenderer>().sprite = this.ProjectileSprite;
-				projectile.GetComponent<Projectile>().OwnerHero = this;
-				projectile.transform.localScale = this.transform.localScale;
-				Vector2 launchForce = this.ProjectileLaunchForce;
-				if (!this.FacingRight)
-				{
-					launchForce = new Vector2(launchForce.x * -1.0f, launchForce.y);
-				}
-				projectile.GetComponent<Rigidbody2D>().AddForce(launchForce);
-
-				SoundFX.Instance.OnHeroFire(this);
-			}
 		}
 
 	}

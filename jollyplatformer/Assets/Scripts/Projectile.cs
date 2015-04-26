@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 	public float Lifetime;
 	private float LifetimeRemaining;
 	public Hero OwnerHero;
+	public Vector2 Velocity;
 
 	void Start ()
 	{
@@ -20,6 +21,11 @@ public class Projectile : MonoBehaviour
 		{
 			Destroy (this.gameObject);
 		}
+	}
+
+	void LateUpdate ()
+	{
+		this.transform.Translate (this.Velocity * Time.deltaTime);
 	}
 
 	void OnCollisionEnter2D(Collision2D collision)
