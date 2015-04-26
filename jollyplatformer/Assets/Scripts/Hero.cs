@@ -566,7 +566,7 @@ public class Hero : MonoBehaviour
 		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.grounded && !this.IsStunned ();
 	}
 
-	void Grow()
+	public void Grow()
 	{
 		if (this.CanGrow())
 		{
