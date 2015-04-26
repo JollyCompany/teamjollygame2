@@ -319,9 +319,10 @@ public class Hero : MonoBehaviour
 						hitSomething = true;
 						if (!grounded)
 						{
+							Hero hero = raycastHit.collider.gameObject.GetComponent<Hero>();
+
 							if (Stomping)
 							{
-								Hero hero = raycastHit.collider.gameObject.GetComponent<Hero>();
 								if (null == hero)
 								{
 									SoundFX.Instance.OnHeroStompLand(this);
@@ -340,6 +341,10 @@ public class Hero : MonoBehaviour
 							}
 							else
 							{
+								if (hero)
+								{
+									bounce = true;
+								}
 								SoundFX.Instance.OnHeroLanded(this);
 							}
 						}
@@ -412,101 +417,13 @@ public class Hero : MonoBehaviour
 			scoreKeeper.GetComponent<ScoreKeeper>().ResetGame();
         }
 
+		this.transform.Translate (this.velocity * Time.fixedDeltaTime);
     }
 
 
 	void LateUpdate ()
 	{
-		this.transform.Translate (this.velocity * Time.deltaTime);
 	}
-
-	/*
-	void OldFixedUpdate ()
-	{
-
-		if (this.TimeLeftStunned > 0.0f)
-		{
-			this.TimeLeftStunned -= Time.deltaTime;
-
-			if (this.TimeLeftStunned <= 0.0f)
-			{
-				this.StopStun();
-			}
-		}
-
-		if (this.HeroController.GetBiggerEnd)
-
-		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
-		bool canAct = !this.IsChanneling && !this.Stomping && !this.IsStunned();
-
-		JollyDebug.Watch (this, "CanMove", canMove);
-		JollyDebug.Watch (this, "CanAct", canAct);
-
-		float horizontal = this.HeroController.HorizontalMovementAxis;
-		if (!canMove)
-		{
-			horizontal = 0;
-		}
-
-		var v = this.GetComponent<Rigidbody2D>().velocity;
-		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (horizontal * this.MaxSpeed, v.y);
-
-		float maxSpeed = Mathf.Abs (this.MaxSpeed * horizontal);
-		if (Mathf.Abs(this.GetComponent<Rigidbody2D>().velocity.x) > maxSpeed)
-		{
-			this.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign (this.GetComponent<Rigidbody2D>().velocity.x) * maxSpeed, this.GetComponent<Rigidbody2D>().velocity.y);
-		}
-
-		if (this.Stomping)
-		{
-			Vector3 direction = this.GroundDetector.transform.position - this.transform.position;
-			RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, direction, direction.magnitude);
-			if (hits.Length > 0)
-			{
-				for (int i = 0; i < hits.Length; ++i)
-				{
-					Hero hero = hits[i].collider.gameObject.GetComponent<Hero>();
-					if (hero && hero != this)
-					{
-						if (this.GetGrowStage() > hero.GetGrowStage())
-						{
-							SoundFX.Instance.OnHeroStompLandSquish(this);
-							hero.Die(this);
-						}
-						else
-						{
-							SoundFX.Instance.OnHeroStompLandStun(this);
-							hero.Stun(this);
-						}
-					}
-				}
-			}
-
-			Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
-			if (rigidBody.velocity.y > -0.5f)
-			{
-				this.Stomping = false;
-			}
-		}
-
-		if (canAct)
-		{
-
-			if (this.ShouldStomp)
-			{
-				this.Stomping = true;
-
-				Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
-				rigidBody.velocity = new Vector2(0, 0);
-				this.GetComponent<Rigidbody2D>().AddForce (-Vector2.up * StompForce * 1/this.scale);
-				this.ShouldStomp = false;
-				SoundFX.Instance.OnHeroStompStart(this);
-			}
-
-		}
-
-	}
-*/
 
 	void Flip ()
 	{
