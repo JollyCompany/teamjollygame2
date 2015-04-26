@@ -553,10 +553,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7012d735c0c864a6cb31bceb6c53c5d0, type: 3}
   Respawn:
   - {fileID: 8300000, guid: 58053dce6f44c42a69714dba9d9ae3e0, type: 3}
-  StompStart: []
-  StompLandStun: []
-  StompLandSquish: []
-  StompLand: []
+  StompStart:
+  - {fileID: 8300000, guid: 61b6b793d2fd34430be79706a6edfbaa, type: 3}
+  StompLandStun:
+  - {fileID: 8300000, guid: 61848e69595314f8bbdeeb7bc2863776, type: 3}
+  StompLandSquish:
+  - {fileID: 8300000, guid: 62a7ecb54b4c24068bf10040b4184eeb, type: 3}
+  StompLand:
+  - {fileID: 8300000, guid: c63be38f7e00440d69c55d68aab146dc, type: 3}
   Stunned: []
   MatchWon: []
   HeroReachedMaxSize: []
