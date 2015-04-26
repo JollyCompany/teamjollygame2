@@ -518,7 +518,6 @@ public class Hero : MonoBehaviour
 		this.ChannelVisualInstance.GetComponent<ChannelVisual>().ChannelTime = this.ChannelTime;
 		this.ChannelVisualInstance.GetComponent<ChannelVisual>().Hero = this;
 		this.ChannelVisualInstance.transform.localScale = new Vector3(this.ChannelVisualInstance.transform.localScale.x * this.scale, this.ChannelVisualInstance.transform.localScale.y * this.scale, this.ChannelVisualInstance.transform.localScale.z * this.scale);
-		this.ChannelVisualInstance.transform.parent = this.transform;
 	}
 
 	void StopChannelGrow()
