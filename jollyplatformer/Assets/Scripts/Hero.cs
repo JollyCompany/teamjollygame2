@@ -41,11 +41,16 @@ public class Hero : MonoBehaviour
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
 
+	public Sprite[] BodySprites;
+	public Sprite[] ProjectileSprites;
 	public Sprite ProjectileSprite;
 
 	void Start ()
 	{
 		this.HeroController = this.GetComponent<HeroController>();
+		JollyDebug.Log ("Player Number = {0}", this.HeroController.PlayerNumber);
+		this.GetComponentInChildren<SpriteRenderer>().sprite = this.BodySprites[this.HeroController.PlayerNumber];
+		this.ProjectileSprite = this.ProjectileSprites[this.HeroController.PlayerNumber];
 
 		JollyDebug.Watch (this, "FacingRight", delegate ()
 		{

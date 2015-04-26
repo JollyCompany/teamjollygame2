@@ -99,7 +99,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 188786}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.5, y: -6.19999981, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 458088}
@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d906238c70e5243579e3b0ccc58b0bd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerNumber: 0
 --- !u!114 &11466392
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -194,9 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6acd4c884b7c4b5c9db3d432e5951e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSpeed: 5
-  MoveForce: 35
-  JumpForce: 1000
   StompForce: 1000
   ScaleAdjustment: .75
   ScaleIterations: 5
@@ -204,15 +202,27 @@ MonoBehaviour:
   GroundDetector: {fileID: 129692}
   ProjectileEmitLocator: {fileID: 115056}
   ChannelLocator: {fileID: 132850}
+  CounterLocator: {fileID: 0}
   Projectile: {fileID: 100000, guid: bbfe1742032334cdca96228680379636, type: 2}
   ChannelVisual: {fileID: 100000, guid: b92ba7190135c40e0818e81d8b7878ff, type: 2}
-  RenderingCamera: {fileID: 0}
+  MaxGrowthVisual: {fileID: 0}
   ChannelTime: 2.5
+  RespawnTime: 0
   PlayerIndex: 1
   HUDText: {fileID: 13234722, guid: 05cb476ad74084b6c8b1f911d9292899, type: 2}
   TimeAtMaxSize: 0
   ProjectileLaunchVelocity: 15
   ProjectileDelay: 1
+  BodySprites:
+  - {fileID: 21300002, guid: 70d1b359d3bff40b38695c77ce488828, type: 3}
+  - {fileID: 21300010, guid: 189c3c1b7d46745df9f16c264751f3b3, type: 3}
+  - {fileID: 21300002, guid: 0afb31d454bd94378803684ab99ba5d7, type: 3}
+  - {fileID: 21300000, guid: 1c860f0d83f2c450288bf82f0cdaf973, type: 3}
+  ProjectileSprites:
+  - {fileID: 21300000, guid: 25913286cebd94ba88c9d642fc1ba721, type: 3}
+  - {fileID: 21300000, guid: 2444351bafc5d4974bf684c9139cacca, type: 3}
+  - {fileID: 21300000, guid: 65e011f1bb480473191bd0cff91251cb, type: 3}
+  - {fileID: 21300000, guid: 937b260d445b24182b657b09826e95f2, type: 3}
   ProjectileSprite: {fileID: 21300000, guid: 25913286cebd94ba88c9d642fc1ba721, type: 3}
   Margin: 1
   Gravity: .850000024

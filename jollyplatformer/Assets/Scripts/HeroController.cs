@@ -4,24 +4,23 @@ using InControl;
 
 public class HeroController : MonoBehaviour
 {
-	private int playerNumber;
+	public int PlayerNumber;
 
 	void Start ()
 	{
 		string playerNumberString = this.name.Substring(this.name.Length-2, 1);
-		Debug.Log (playerNumberString);
-		this.playerNumber = int.Parse(playerNumberString);
+		this.PlayerNumber = int.Parse(playerNumberString);
 	}
 
 	public InputDevice InputDevice
 	{
 		get
 		{
-			if (this.playerNumber >= InputManager.Devices.Count)
+			if (this.PlayerNumber >= InputManager.Devices.Count)
 			{
 				return null;
 			}
-			return InputManager.Devices[this.playerNumber];
+			return InputManager.Devices[this.PlayerNumber];
 		}
 	}
 
