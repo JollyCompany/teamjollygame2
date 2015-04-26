@@ -13,7 +13,6 @@ public class Hero : MonoBehaviour
 	public int ScaleIterations;
 	public Vector2 HUDPosition;
 	public GameObject GroundDetector;
-	public GameObject ScreenEdgeDetector;
 	public GameObject ProjectileEmitLocator;
 	public GameObject ChannelLocator;
 	public GameObject Projectile;
@@ -116,10 +115,34 @@ public class Hero : MonoBehaviour
 
 	void Update ()
 	{
-		if (this.grounded && this.HeroController.Jump)
+		if (this.grounded)
 		{
-			this.velocity = new Vector2 (this.velocity.x, this.Jump);
+			this.CanDoubleJump = true;
 		}
+
+		if (this.HeroController.Jump)
+		{
+			bool doubleJumped = false;
+
+			if (this.grounded || this.CanDoubleJump)
+			{
+				if (!this.grounded)
+				{
+					this.CanDoubleJump = false;
+				}
+				this.velocity = new Vector2 (this.velocity.x, this.Jump);
+			}
+
+			if (doubleJumped)
+			{
+				SoundFX.Instance.OnHeroDoubleJumped(this);
+			}
+			else
+			{
+				SoundFX.Instance.OnHeroJumped(this);
+			}
+		}
+
 
 		this.velocity = new Vector2 (this.HeroController.HorizontalMovementAxis * this.MaxNewSpeed, this.velocity.y);
 	}
