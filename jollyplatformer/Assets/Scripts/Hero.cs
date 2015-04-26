@@ -29,7 +29,6 @@ public class Hero : MonoBehaviour
 	private float TimeUntilNextProjectile = 0.0f;
 
 	private bool ShouldJump = false;
-	private bool AtEdgeOfScreen = false;
 	private bool FacingRight = true;
 
 	private float RespawnTimeLeft = 0.0f;
@@ -114,9 +113,6 @@ public class Hero : MonoBehaviour
 			this.ShouldJump = true;
 		}
 
-		float viewportPointOfEdgeDetector = this.RenderingCamera.WorldToViewportPoint(this.ScreenEdgeDetector.transform.position).x;
-		this.AtEdgeOfScreen = viewportPointOfEdgeDetector < 0.0f || viewportPointOfEdgeDetector >= 1.0f;
-
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
 		if (this.HeroController.GetBiggerEnd)
@@ -153,17 +149,8 @@ public class Hero : MonoBehaviour
 			horizontal = 0;
 		}
 
-		bool movingIntoScreenEdge = (horizontal > 0 && this.FacingRight) || (horizontal < 0 && !this.FacingRight);
-		if (this.AtEdgeOfScreen && movingIntoScreenEdge)
-		{
-			this.GetComponent<Rigidbody2D>().velocity = new Vector2(0, this.GetComponent<Rigidbody2D>().velocity.y);
-			horizontal = 0.0f;
-		}
-
-		if (horizontal * this.GetComponent<Rigidbody2D>().velocity.x < this.MaxSpeed)
-		{
-			this.GetComponent<Rigidbody2D>().AddForce (Vector2.right * horizontal * MoveForce);
-		}
+		var v = this.GetComponent<Rigidbody2D>().velocity;
+		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (horizontal * this.MaxSpeed, v.y);
 
 		float maxSpeed = Mathf.Abs (this.MaxSpeed * horizontal);
 		if (Mathf.Abs(this.GetComponent<Rigidbody2D>().velocity.x) > maxSpeed)
