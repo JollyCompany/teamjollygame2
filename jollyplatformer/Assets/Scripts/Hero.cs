@@ -384,6 +384,13 @@ public class Hero : MonoBehaviour
 			}
             
         }
+		
+		if (this.HeroController.GetResetGame)
+		{
+			GameObject scoreKeeper = GameObject.Find("ScoreKeeper");
+			scoreKeeper.GetComponent<ScoreKeeper>().ResetGame();
+        }
+        
     }
 
 
