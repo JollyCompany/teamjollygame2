@@ -252,11 +252,13 @@ MonoBehaviour:
   ChannelLocator: {fileID: 100008}
   CounterLocator: {fileID: 158696}
   Projectile: {fileID: 100000, guid: bbfe1742032334cdca96228680379636, type: 2}
+  StunVisual: {fileID: 100000, guid: 13a62619e9de440989955c15fd635069, type: 2}
   ChannelVisual: {fileID: 100000, guid: b92ba7190135c40e0818e81d8b7878ff, type: 2}
   MaxGrowthVisual: {fileID: 100000, guid: b84a13b246f614ac4b6284dbc234a8e7, type: 2}
   RenderingCamera: {fileID: 0}
   ChannelTime: 2.5
   RespawnTime: 5
+  StunTime: 1
   PlayerIndex: 1
   HUDText: {fileID: 13234722, guid: 05cb476ad74084b6c8b1f911d9292899, type: 2}
   TimeAtMaxSize: 0
