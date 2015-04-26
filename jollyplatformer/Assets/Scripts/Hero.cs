@@ -21,6 +21,7 @@ public class Hero : MonoBehaviour
 			return Vector2.zero;
 		}
 	}
+	public float SpawnMagnitude;
 	public GameObject GroundDetector;
 	public GameObject ProjectileEmitLocator;
 	public GameObject ChannelLocator;
@@ -68,6 +69,8 @@ public class Hero : MonoBehaviour
 	private float StartScale;
 	private float StartWidth;
 	private float JumpForgivenessTimeLeft;
+	private GameObject MaxSizeSound;
+	private int NumDeaths;
 
 	public Sprite[] BodySprites;
 	public Sprite[] ProjectileSprites;
@@ -151,11 +154,21 @@ public class Hero : MonoBehaviour
 		style.fontSize = (int)(Screen.width * 0.027027f);
 		style.alignment = TextAnchor.UpperLeft;
 
+		string displayString = "Flawless!";
 		if (this.RespawnTimeLeft > 0)
 		{
-			string displayString = string.Format("Back in {0}s!", ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString());
-			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 1.25f) / 1920.0f * Screen.width, 0, Screen.width, Screen.height), displayString, style, Color.black, Color.white, 1);
+			displayString = string.Format("Back in {0}s!", ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString());
 		}
+		else if (this.NumDeaths == 1)
+		{
+ 			displayString = string.Format("{0} Death", 1);
+		}
+		else if (this.NumDeaths > 0)
+		{
+			displayString = string.Format("{0} Deaths", this.NumDeaths);
+		}
+
+		this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 1.25f) / 1920.0f * Screen.width, 0, Screen.width, Screen.height), displayString, style, Color.black, Color.white, 1);
 	}
 
 	bool CanJumpOffGround()
@@ -487,9 +500,13 @@ public class Hero : MonoBehaviour
 			return;
 		}
 
+		AudioSourceExt.StopClipOnObject(this.MaxSizeSound);
+		Destroy(this.MaxSizeSound);
+
 		SoundFX.Instance.OnHeroDies(this);
 		this.RespawnTimeLeft = this.RespawnTimeCalculated;
 		this.RespawnTimeCalculated += this.RespawnTimeIncreasePerDeath;
+		this.NumDeaths++;
 
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
@@ -582,7 +599,7 @@ public class Hero : MonoBehaviour
 			if (this.GetGrowStage() == this.ScaleIterations)
 			{
 				this.AddMaxSizeVisual();
-				SoundFX.Instance.OnHeroReachedMaxSize(this);
+				this.MaxSizeSound = SoundFX.Instance.OnHeroReachedMaxSize(this);
 			}
 			else
 			{
@@ -597,16 +614,18 @@ public class Hero : MonoBehaviour
 		this.Respawn();
 		this.transform.localPosition = Vector3.zero;
 		this.RespawnTimeCalculated = this.RespawnTime;
+		this.NumDeaths = 0;
     }
 
 	void Respawn()
 	{
 		this.transform.position = new Vector3(0,0,0);
+
+		this.velocity = new Vector2(0.0f, 1.0f) * this.SpawnMagnitude;
+
 		SoundFX.Instance.OnHeroRespawn(this);
 		this.RespawnTimeLeft = -1.0f;
     }
-
-
 
 	void SetGrowStage(int growStage)
 	{
