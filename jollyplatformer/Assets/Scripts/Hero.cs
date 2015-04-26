@@ -245,7 +245,7 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.IsGrounded;
+		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.IsGrounded();
 	}
 
 	void Grow()
