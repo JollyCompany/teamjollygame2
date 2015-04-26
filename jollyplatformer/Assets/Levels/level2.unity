@@ -558,6 +558,9 @@ MonoBehaviour:
   StompLandSquish: []
   StompLand: []
   Stunned: []
+  MatchWon: []
+  HeroReachedMaxSize: []
+  HeroAboutToWin: []
   MusicTracks: []
 --- !u!4 &243285036
 Transform:
@@ -2552,6 +2555,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimeToWin: 10
   WinningHero: {fileID: 0}
+  HeroAboutToWin: {fileID: 0}
+  HeroAboutToWinSound: {fileID: 0}
 --- !u!1 &1486187055 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 188786, guid: 27ab4ff619d2c4e8db6ee852cd94d92a, type: 2}
