@@ -196,6 +196,24 @@ public class Hero : MonoBehaviour
 
 		if (this.Stomping)
 		{
+			Vector3 direction = this.GroundDetector.transform.position - this.transform.position;
+			RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, direction, direction.magnitude);
+			Debug.Log(string.Format("Hits {0}", hits.Length));
+			if (hits.Length > 0)
+			{
+				for (int i = 0; i < hits.Length; ++i)
+				{
+					Hero hero = hits[i].collider.gameObject.GetComponent<Hero>();
+					if (hero && hero != this)
+					{
+						if (this.GetGrowStage() > hero.GetGrowStage())
+						{
+							hero.Die(this);
+						}
+					}
+				}
+			}
+
 			Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
 			if (rigidBody.velocity.y > -0.5f)
 			{
@@ -276,6 +294,9 @@ public class Hero : MonoBehaviour
 		this.RespawnTimeLeft = 5.0f;
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
+		this.Stomping = false;
+		this.ShouldStomp = false;
+		this.ShouldJump = false;
 	}
 
 	void StartChannelGrow()
