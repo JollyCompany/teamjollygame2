@@ -95,6 +95,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &158696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 406054}
+  m_Layer: 0
+  m_Name: CounterLocator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -126,7 +141,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.2700558, y: 2.59949017, z: 0}
+  m_LocalPosition: {x: -17.5, y: -6.19999981, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -134,6 +149,7 @@ Transform:
   - {fileID: 400006}
   - {fileID: 425412}
   - {fileID: 400008}
+  - {fileID: 406054}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &400006
@@ -160,6 +176,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 400004}
   m_RootOrder: 4
+--- !u!4 &406054
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 158696}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.20000005, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400004}
+  m_RootOrder: 5
 --- !u!4 &425412
 Transform:
   m_ObjectHideFlags: 1
@@ -217,21 +245,24 @@ MonoBehaviour:
   StompForce: 1000
   ScaleAdjustment: .75
   ScaleIterations: 5
-  HUDPosition: {x: 0, y: 0}
+  HUDPosition: {x: 15, y: 35}
   GroundDetector: {fileID: 100000}
   ScreenEdgeDetector: {fileID: 100006}
   ProjectileEmitLocator: {fileID: 148220}
   ChannelLocator: {fileID: 100008}
+  CounterLocator: {fileID: 158696}
   Projectile: {fileID: 100000, guid: bbfe1742032334cdca96228680379636, type: 2}
   ChannelVisual: {fileID: 100000, guid: b92ba7190135c40e0818e81d8b7878ff, type: 2}
+  MaxGrowthVisual: {fileID: 100000, guid: b84a13b246f614ac4b6284dbc234a8e7, type: 2}
   RenderingCamera: {fileID: 0}
   ChannelTime: 2.5
-  PlayerIndex: 0
+  RespawnTime: 5
+  PlayerIndex: 1
   HUDText: {fileID: 13234722, guid: 05cb476ad74084b6c8b1f911d9292899, type: 2}
   TimeAtMaxSize: 0
-  ProjectileLaunchForce: {x: 500, y: 10}
+  ProjectileLaunchForce: {x: 700, y: 0}
   ProjectileDelay: 1
-  ProjectileSprite: {fileID: 21300000, guid: 2444351bafc5d4974bf684c9139cacca, type: 3}
+  ProjectileSprite: {fileID: 21300000, guid: 25913286cebd94ba88c9d642fc1ba721, type: 3}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

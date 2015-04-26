@@ -15,10 +15,13 @@ public class Hero : MonoBehaviour
 	public GameObject GroundDetector;
 	public GameObject ProjectileEmitLocator;
 	public GameObject ChannelLocator;
+	public GameObject CounterLocator;
 	public GameObject Projectile;
 	public GameObject ChannelVisual;
+	public GameObject MaxGrowthVisual;
 	public Camera RenderingCamera;
 	public float ChannelTime;
+	public float RespawnTime;
 	public int PlayerIndex;
 	public GUIText HUDText;
 	public float TimeAtMaxSize;
@@ -38,6 +41,7 @@ public class Hero : MonoBehaviour
 	private float TimeSpentChanneling = 0.0f;
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
+	private GameObject MaxVisualInstance;
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
 
@@ -77,34 +81,37 @@ public class Hero : MonoBehaviour
 		float iconSizeWidth = 50;
 		float heartSizeWidth = 35;
 
+		float textWidth = 100;
+
 		float xPosition = position.x;
 
 		Texture badge = (Texture)Resources.Load(string.Format("p{0}_badge", this.PlayerIndex), typeof(Texture));
 		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - iconSizeWidth * 0.5f) / 1080.0f * Screen.height, iconSizeWidth / 1920.0f * Screen.width, iconSizeWidth / 1920.0f * Screen.width), badge);
 		xPosition += (iconSizeWidth * 1.5f);
 
+		bool drawHearts = false;
+		if (drawHearts)
+		{
+			Texture heart = (Texture)Resources.Load("heart_full", typeof(Texture));
+			GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+			xPosition += (heartSizeWidth * 1.1f);
 
-		Texture heart = (Texture)Resources.Load("heart_full", typeof(Texture));
-		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
-		xPosition += (heartSizeWidth * 1.1f);
+			GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+			xPosition += (heartSizeWidth * 1.1f);
 
-		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
-		xPosition += (heartSizeWidth * 1.1f);
-
-		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
-		xPosition += (iconSizeWidth * 1.5f);
-
-		float textWidth = 100;
+			GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
+			xPosition += (iconSizeWidth * 1.5f);
+		}
 
 		GUIStyle style = new GUIStyle("label");
 		style.font = this.HUDText.font;
-		style.fontSize = 20;
+		style.fontSize = (int)(Screen.width * 0.027027f);
 		style.alignment = TextAnchor.UpperLeft;
 
 		if (this.RespawnTimeLeft > 0)
 		{
 			string displayString = ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString();
-			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 0.25f) / 1920.0f * Screen.width, 0, textWidth, 40), displayString, style, Color.black, Color.white, 1);
+			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 1.25f) / 1920.0f * Screen.width, 0, textWidth, 40), displayString, style, Color.black, Color.white, 1);
 		}
 	}
 
@@ -349,7 +356,6 @@ public class Hero : MonoBehaviour
 		{
 			Vector3 direction = this.GroundDetector.transform.position - this.transform.position;
 			RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, direction, direction.magnitude);
-			Debug.Log(string.Format("Hits {0}", hits.Length));
 			if (hits.Length > 0)
 			{
 				for (int i = 0; i < hits.Length; ++i)
@@ -412,15 +418,18 @@ public class Hero : MonoBehaviour
 		this.Die(attackingHero);
 	}
 
-	void Die (Hero attackingHero)
+	void Die(Hero attackingHero)
 	{
 		SoundFX.Instance.OnHeroDies(this);
-		this.RespawnTimeLeft = 5.0f;
+		this.RespawnTimeLeft = this.RespawnTime;
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
 		this.Stomping = false;
 		this.ShouldStomp = false;
 		this.ShouldJump = false;
+
+		this.TimeAtMaxSize = 0;
+		this.RemoveMaxSizeVisual();
 	}
 
 	void StartChannelGrow()
@@ -437,7 +446,29 @@ public class Hero : MonoBehaviour
 	{
 		this.TimeSpentChanneling = 0.0f;
 		this.IsChanneling = false;
-		Destroy(this.ChannelVisualInstance);
+
+		if (this.ChannelVisualInstance)
+		{
+			this.ChannelVisualInstance.GetComponent<ChannelVisual>().Stop();
+			Destroy(this.ChannelVisualInstance);
+		}
+	}
+
+	void AddMaxSizeVisual()
+	{
+		if (this.MaxGrowthVisual == null)
+		{
+			return;
+		}
+
+		this.MaxVisualInstance = (GameObject)GameObject.Instantiate(this.MaxGrowthVisual, this.ChannelLocator.transform.position, Quaternion.identity);
+		this.MaxVisualInstance.transform.localScale = new Vector3(this.MaxVisualInstance.transform.localScale.x * this.scale, this.MaxVisualInstance.transform.localScale.y * this.scale, this.MaxVisualInstance.transform.localScale.z * this.scale);
+		this.MaxVisualInstance.transform.parent = this.transform;
+	}
+
+	void RemoveMaxSizeVisual()
+	{
+		Destroy(this.MaxVisualInstance);
 	}
 
 	bool CanGrow()
@@ -451,12 +482,16 @@ public class Hero : MonoBehaviour
 		{
 			SetGrowStage(this.GetGrowStage() + 1);
 			SoundFX.Instance.OnHeroGrowComplete(this);
+
+			if (this.GetGrowStage() == this.ScaleIterations)
+			{
+				this.AddMaxSizeVisual();
+			}
 		}
 	}
 
 	void SetGrowStage(int growStage)
 	{
-
 		this.scale = (this.ScaleAdjustment * growStage) + 1.0f;
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
 		rb.mass = (1.0f / this.scale);
