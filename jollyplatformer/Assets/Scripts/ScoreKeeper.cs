@@ -8,6 +8,8 @@ public class ScoreKeeper : MonoBehaviour
 {
 	public float TimeToWin;
 	public Hero WinningHero;
+	public Hero HeroAboutToWin;
+	public GameObject HeroAboutToWinSound;
 
 	Hero FindWinningPlayer()
 	{
@@ -47,6 +49,12 @@ public class ScoreKeeper : MonoBehaviour
 		return null;
 	}
 
+	void StopHeroAboutToWinSound()
+	{
+		AudioSourceExt.StopClipOnObject(this.HeroAboutToWinSound);
+		Destroy(this.HeroAboutToWinSound);
+	}
+
 	void Update()
 	{
 		if (this.WinningHero != null)
@@ -57,17 +65,31 @@ public class ScoreKeeper : MonoBehaviour
 		Hero hero = this.FindWinningPlayer();
 		if (hero != null)
 		{
+			if (this.HeroAboutToWin != hero)
+			{
+				this.StopHeroAboutToWinSound();
+				this.HeroAboutToWinSound = SoundFX.Instance.OnHeroAboutToWin(hero);
+			}
+
+			this.HeroAboutToWin = hero;
 			hero.TimeAtMaxSize += Time.deltaTime;
 			if (hero.TimeAtMaxSize >= this.TimeToWin)
 			{
 				this.WinningHero = hero;
+				this.StopHeroAboutToWinSound();
+				SoundFX.Instance.OnMatchWon(hero);
 			}
+		}
+		else
+		{
+			this.StopHeroAboutToWinSound();
 		}
 	}
 
 	public void ResetGame()
 	{
 		this.WinningHero = null;
+		this.HeroAboutToWin = null;
 
 		Hero[] heroes = FindObjectsOfType(typeof(Hero)) as Hero[];
 		foreach (Hero hero in heroes)

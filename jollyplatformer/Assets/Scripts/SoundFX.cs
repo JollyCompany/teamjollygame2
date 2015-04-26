@@ -37,6 +37,9 @@ public class SoundFX : MonoBehaviour
 	public AudioClip[] StompLandSquish;
 	public AudioClip[] StompLand;
 	public AudioClip[] Stunned;
+	public AudioClip[] MatchWon;
+	public AudioClip[] HeroReachedMaxSize;
+	public AudioClip[] HeroAboutToWin;
 
 	public GameObject[] MusicTracks;
 
@@ -113,5 +116,20 @@ public class SoundFX : MonoBehaviour
 	public GameObject OnHeroStunned(Hero hero)
 	{
 		return AudioSourceExt.PlayRandomClipAtPoint (this.Stunned, hero.xyz());
+	}
+
+	public GameObject OnMatchWon(Hero hero)
+	{
+		return AudioSourceExt.PlayRandomClipAtPoint (this.MatchWon, hero.xyz());
+	}
+
+	public GameObject OnHeroAboutToWin(Hero hero)
+	{
+		return AudioSourceExt.PlayRandomClipAtPoint (this.HeroAboutToWin, hero.xyz());
+	}
+
+	public GameObject OnHeroReachedMaxSize(Hero hero)
+	{
+		return AudioSourceExt.PlayRandomClipAtPoint (this.HeroReachedMaxSize, hero.xyz());
 	}
 }

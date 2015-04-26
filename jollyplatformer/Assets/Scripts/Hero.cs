@@ -504,8 +504,6 @@ public class Hero : MonoBehaviour
 			return;
 		}
 
-		JollyDebug.Log ("GETING HIT");
-
 		this.Die(attackingHero);
 	}
 
@@ -599,11 +597,15 @@ public class Hero : MonoBehaviour
 		if (this.CanGrow())
 		{
 			SetGrowStage(this.GetGrowStage() + 1);
-			SoundFX.Instance.OnHeroGrowComplete(this);
 
 			if (this.GetGrowStage() == this.ScaleIterations)
 			{
 				this.AddMaxSizeVisual();
+				SoundFX.Instance.OnHeroReachedMaxSize(this);
+			}
+			else
+			{
+				SoundFX.Instance.OnHeroGrowComplete(this);
 			}
 		}
 	}
