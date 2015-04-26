@@ -273,6 +273,7 @@ MonoBehaviour:
   ChannelLocator: {fileID: 132850}
   CounterLocator: {fileID: 118530}
   Projectile: {fileID: 100000, guid: bbfe1742032334cdca96228680379636, type: 2}
+  ProjectileExplosion: {fileID: 100000, guid: c1afa07dbac014154a2edac72a5cd596, type: 2}
   StunVisual: {fileID: 100000, guid: 13a62619e9de440989955c15fd635069, type: 2}
   ChannelVisual: {fileID: 100000, guid: b92ba7190135c40e0818e81d8b7878ff, type: 2}
   MaxGrowthVisual: {fileID: 100000, guid: b84a13b246f614ac4b6284dbc234a8e7, type: 2}
@@ -296,7 +297,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2444351bafc5d4974bf684c9139cacca, type: 3}
   - {fileID: 21300000, guid: 65e011f1bb480473191bd0cff91251cb, type: 3}
   - {fileID: 21300000, guid: 937b260d445b24182b657b09826e95f2, type: 3}
+  ProjectileExplosions:
+  - {fileID: 21300000, guid: dda4627db66db4091881151cdeb337b9, type: 3}
+  - {fileID: 21300000, guid: 257d4790a479d46a6a90fc0376255284, type: 3}
+  - {fileID: 21300000, guid: e59b825c3e0a14566b02094270a60d70, type: 3}
+  - {fileID: 21300000, guid: 09d00efcaa37c438382962a8f06b48c5, type: 3}
   ProjectileSprite: {fileID: 21300000, guid: 25913286cebd94ba88c9d642fc1ba721, type: 3}
+  ProjectileExplosionSprite: {fileID: 0}
   StaticMargin: .200000003
   FallingMargin: 1.20000005
   Gravity: .850000024
@@ -304,7 +311,7 @@ MonoBehaviour:
   StompSpeed: 30
   StompGravity: 3.5
   MaxStompFall: 50
-  Jump: 18
+  Jump: 20
   Acceleration: 4
   MaxNewSpeed: 10
   GrowPopSpeed: 3

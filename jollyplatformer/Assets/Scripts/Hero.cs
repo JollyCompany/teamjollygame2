@@ -27,6 +27,7 @@ public class Hero : MonoBehaviour
 	public GameObject ChannelLocator;
 	public GameObject CounterLocator;
 	public GameObject Projectile;
+	public GameObject ProjectileExplosion;
 	public GameObject StunVisual;
 	public GameObject ChannelVisual;
 	public GameObject MaxGrowthVisual;
@@ -74,13 +75,16 @@ public class Hero : MonoBehaviour
 
 	public Sprite[] BodySprites;
 	public Sprite[] ProjectileSprites;
+	public Sprite[] ProjectileExplosions;
 	public Sprite ProjectileSprite;
+	public Sprite ProjectileExplosionSprite;
 
 	void Start ()
 	{
 		this.HeroController = this.GetComponent<HeroController>();
 		this.GetComponentInChildren<SpriteRenderer>().sprite = this.BodySprites[this.HeroController.PlayerNumber];
 		this.ProjectileSprite = this.ProjectileSprites[this.HeroController.PlayerNumber];
+		this.ProjectileExplosionSprite = this.ProjectileExplosions[this.HeroController.PlayerNumber];
 		this.StartScale = this.scale;
 		this.StartWidth = this.GetComponent<Collider2D>().bounds.size.x;
 		this.RespawnTimeCalculated = this.RespawnTime;
@@ -212,8 +216,8 @@ public class Hero : MonoBehaviour
 				SoundFX.Instance.OnHeroFire(this);
 				Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
 			}
-			
-			
+
+
 			bool controllerIssuedStomp = (this.HeroController.Jump && !this.CanDoubleJump);
 			if (controllerIssuedStomp && !this.CanJumpOffGround() && this.canStomp)
 			{
@@ -223,7 +227,7 @@ public class Hero : MonoBehaviour
 				SoundFX.Instance.OnHeroStompStart(this);
 			}
 		}
-		
+
 		if (this.HeroController.GetResetGame)
 		{
 			GameObject scoreKeeper = GameObject.Find("ScoreKeeper");
@@ -489,6 +493,9 @@ public class Hero : MonoBehaviour
 		{
 			return;
 		}
+
+		GameObject projectileExplosion = (GameObject)GameObject.Instantiate(attackingHero.ProjectileExplosion, this.transform.position, Quaternion.identity);
+		projectileExplosion.GetComponent<SpriteRenderer>().sprite = attackingHero.ProjectileExplosionSprite;
 
 		if (this.GetComponent<ShieldBuff>().enabled)
 		{
