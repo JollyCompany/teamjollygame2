@@ -603,9 +603,14 @@ public class Hero : MonoBehaviour
 		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.grounded && !this.IsStunned ();
 	}
 
+	bool CanGrowByPickup()
+	{
+		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations;
+	}
+
 	public void Grow(bool growByPickup = false)
 	{
-		if (growByPickup || this.CanGrow())
+		if ((growByPickup && this.CanGrowByPickup()) || this.CanGrow())
 		{
 			SetGrowStage(this.GetGrowStage() + 1);
 			if (!growByPickup)
