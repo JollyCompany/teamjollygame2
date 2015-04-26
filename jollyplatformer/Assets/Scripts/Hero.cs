@@ -146,11 +146,7 @@ public class Hero : MonoBehaviour
 			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
 
 			this.RespawnTimeLeft -= Time.deltaTime;
-			if (this.RespawnTimeLeft <= 0.0f)
-			{
-				this.transform.position = new Vector3(0,0,0);
-				SoundFX.Instance.OnHeroRespawn(this);
-			}
+			this.Respawn ();
 		}
 
 		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
@@ -612,6 +608,14 @@ public class Hero : MonoBehaviour
 		this.Respawn();
 		this.transform.position = this.SpawnPoint;
     }
+
+	void Respawn()
+	{
+		this.transform.position = new Vector3(0,0,0);
+		SoundFX.Instance.OnHeroRespawn(this);
+		this.RespawnTimeLeft = -1.0f;
+    }
+    
     
 
 	void SetGrowStage(int growStage)
