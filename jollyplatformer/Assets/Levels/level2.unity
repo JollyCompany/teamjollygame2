@@ -222,9 +222,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .600000024, y: -1.20000005, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 292145945}
-  - {fileID: 979891697}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
 --- !u!1001 &61715164
@@ -298,6 +296,23 @@ Prefab:
     - target: {fileID: 5000000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: ProjectileSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 65e011f1bb480473191bd0cff91251cb,
+        type: 3}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: PlayerIndex
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.x
+      value: 975
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.y
+      value: 35
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -919,33 +934,6 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a612b6bb6208b4ebe9de213de64cb987, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!1 &292145944
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 292145945}
-  m_Layer: 0
-  m_Name: Left Edge
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &292145945
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 292145944}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 46875541}
-  m_RootOrder: 0
 --- !u!1 &298025574
 GameObject:
   m_ObjectHideFlags: 0
@@ -1900,6 +1888,23 @@ Prefab:
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: ProjectileSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2444351bafc5d4974bf684c9139cacca,
+        type: 3}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: PlayerIndex
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.x
+      value: 475
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.y
+      value: 35
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
@@ -2687,33 +2692,6 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a612b6bb6208b4ebe9de213de64cb987, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!1 &979891696
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 979891697}
-  m_Layer: 0
-  m_Name: Right Edge
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &979891697
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 979891696}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.3999996, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 46875541}
-  m_RootOrder: 1
 --- !u!1 &993175479
 GameObject:
   m_ObjectHideFlags: 0
@@ -3038,6 +3016,31 @@ Prefab:
     - target: {fileID: 5000000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: m_Size.y
+      value: .920000017
+      objectReference: {fileID: 0}
+    - target: {fileID: 6100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: ProjectileSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 25913286cebd94ba88c9d642fc1ba721,
+        type: 3}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: PlayerIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.y
+      value: 35
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
@@ -3721,6 +3724,46 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e96d334ef8ce44225a9fa38be4b74e2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &1411077401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1411077402}
+  - 114: {fileID: 1411077403}
+  m_Layer: 0
+  m_Name: ScoreKeeper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1411077402
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1411077401}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.26000023, y: 2.5999999, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+--- !u!114 &1411077403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1411077401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac8eb325aad1468d98871545a49a218, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeToWin: 20
 --- !u!1 &1446188482
 GameObject:
   m_ObjectHideFlags: 0
@@ -5920,6 +5963,23 @@ Prefab:
     - target: {fileID: 5000000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: ProjectileSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 937b260d445b24182b657b09826e95f2,
+        type: 3}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: PlayerIndex
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.x
+      value: 1455
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d957a5550a17341fabd452c0cbb85b4b, type: 2}
+      propertyPath: HUDPosition.y
+      value: 35
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
