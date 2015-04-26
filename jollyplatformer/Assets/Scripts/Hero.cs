@@ -606,6 +606,14 @@ public class Hero : MonoBehaviour
 		}
 	}
 
+	public void Reset()
+	{
+		this.Die(null);
+		this.Respawn();
+		this.transform.position = this.SpawnPoint;
+    }
+    
+
 	void SetGrowStage(int growStage)
 	{
 		this.scale = (this.ScaleAdjustment * growStage * this.StartScale) + this.StartScale;
