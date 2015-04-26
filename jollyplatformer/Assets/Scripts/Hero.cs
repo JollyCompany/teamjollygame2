@@ -52,6 +52,8 @@ public class Hero : MonoBehaviour
 		{
 			return this.FacingRight;
 		});
+
+		this.groundMask = LayerMask.NameToLayer ("Ground");
 	}
 
 	private float scale
@@ -114,6 +116,17 @@ public class Hero : MonoBehaviour
 
 	void Update ()
 	{
+		if (this.grounded && this.HeroController.Jump)
+		{
+			this.velocity = new Vector2 (this.velocity.x, this.Jump);
+		}
+
+		this.velocity = new Vector2 (this.HeroController.HorizontalMovementAxis * this.MaxNewSpeed, this.velocity.y);
+	}
+
+	void OldUpdate ()
+	{
+
 		if (this.RespawnTimeLeft > 0.0f)
 		{
 			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
@@ -187,18 +200,73 @@ public class Hero : MonoBehaviour
 		}
 	}
 
+	public float Margin = 0.2f;
+	public float Gravity = 6.0f;
+	public float MaxFall = 200.0f;
+	public float Jump = 200.0f;
+	public float Acceleration = 4.0f;
+	public float MaxNewSpeed = 150.0f;
+	public int VerticalRays;
+
 	private Rect box;
+	private Vector2 velocity = Vector2.zero;
+	private bool falling = false;
+	private bool grounded = false;
+	private int groundMask;
+
 	void FixedUpdate ()
 	{
-		//this.box = new Rect (this.GetComponent<Collider2D>().bounds.
-		Ray2D ray = new Ray (this.transform.position, Vector2.up);
-		bool somethingAboveMe 
+		var bounds = this.GetComponent<Collider2D>().bounds;
+		this.box = Rect.MinMaxRect (bounds.min.x, bounds.min.y, bounds.max.x, bounds.max.y);
 
+		if (!this.grounded)
+		{
+			this.velocity = new Vector2(this.velocity.x, Mathf.Max (this.velocity.y - this.Gravity, -this.MaxFall));
+		}
+
+		this.falling = this.velocity.y < 0;
+
+		bool hitSomething = false;
+		RaycastHit2D raycastHit;
+		if (grounded || falling)
+		{
+			Vector3 startPoint = new Vector3(this.box.xMin + this.Margin, this.box.center.y, this.transform.position.z);
+			Vector3 endPoint   = new Vector3(this.box.xMax - this.Margin, this.box.center.y, this.transform.position.z);
+
+			float distance = this.box.height / 2 + (this.grounded ? this.Margin : Mathf.Abs (this.velocity.y * Time.fixedDeltaTime));
+
+			for (int i = 0; i < this.VerticalRays; ++i)
+			{
+				Vector2 origin = Vector2.Lerp (startPoint, endPoint, (float)i / (float)(VerticalRays - 1));
+
+				raycastHit = Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << this.groundMask);
+
+				if (raycastHit.collider != null)
+				{
+					hitSomething = true;
+					grounded = true;
+					falling = false;
+					this.transform.Translate (Vector3.down * (raycastHit.distance - this.box.height/2));
+					velocity = new Vector2 (velocity.x, 0);
+					break;
+				}
+			}
+		}
+
+		if (!hitSomething)
+		{
+			grounded = false;
+		}
+	}
+
+
+	void LateUpdate ()
+	{
+		this.transform.Translate (this.velocity * Time.deltaTime);
 	}
 
 	void OldFixedUpdate ()
 	{
-
 
 
 		bool canMove = !this.IsChanneling && !this.Stomping;
