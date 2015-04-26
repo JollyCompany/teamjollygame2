@@ -235,6 +235,7 @@ MonoBehaviour:
   MaxGrowthVisual: {fileID: 100000, guid: b84a13b246f614ac4b6284dbc234a8e7, type: 2}
   ChannelTime: 2.5
   RespawnTime: 5
+  RespawnTimeIncreasePerDeath: .5
   StunTime: 1
   HUDText: {fileID: 13234722, guid: 05cb476ad74084b6c8b1f911d9292899, type: 2}
   TimeAtMaxSize: 0

@@ -31,6 +31,7 @@ public class Hero : MonoBehaviour
 	public GameObject MaxGrowthVisual;
 	public float ChannelTime;
 	public float RespawnTime;
+	public float RespawnTimeIncreasePerDeath;
 	public float StunTime;
 	public int PlayerIndex
 	{
@@ -52,6 +53,7 @@ public class Hero : MonoBehaviour
 	private bool FacingRight = true;
 
 	private bool Stomping = false;
+	private float RespawnTimeCalculated = 0.0f;
 	private float RespawnTimeLeft = 0.0f;
 	private float TimeLeftStunned = 0.0f;
 	private float TimeSpentChanneling = 0.0f;
@@ -74,6 +76,7 @@ public class Hero : MonoBehaviour
 		this.GetComponentInChildren<SpriteRenderer>().sprite = this.BodySprites[this.HeroController.PlayerNumber];
 		this.ProjectileSprite = this.ProjectileSprites[this.HeroController.PlayerNumber];
 		this.StartScale = this.scale;
+		this.RespawnTimeCalculated = this.RespawnTime;
 
 		JollyDebug.Watch (this, "FacingRight", delegate ()
 		{
@@ -246,7 +249,7 @@ public class Hero : MonoBehaviour
 		if (this.TimeLeftStunned > 0.0f)
 		{
 			this.TimeLeftStunned -= Time.fixedDeltaTime;
-			
+
 			if (this.TimeLeftStunned <= 0.0f)
             {
                 this.StopStun();
@@ -384,15 +387,15 @@ public class Hero : MonoBehaviour
 				this.velocity = new Vector2(0.0f, this.StompSpeed);
 	            SoundFX.Instance.OnHeroStompStart(this);
 			}
-            
+
         }
-		
+
 		if (this.HeroController.GetResetGame)
 		{
 			GameObject scoreKeeper = GameObject.Find("ScoreKeeper");
 			scoreKeeper.GetComponent<ScoreKeeper>().ResetGame();
         }
-        
+
     }
 
 
@@ -512,8 +515,15 @@ public class Hero : MonoBehaviour
 
 	void Die(Hero attackingHero)
 	{
+		if (!this.IsAlive())
+		{
+			return;
+		}
+
 		SoundFX.Instance.OnHeroDies(this);
-		this.RespawnTimeLeft = this.RespawnTime;
+		this.RespawnTimeLeft = this.RespawnTimeCalculated;
+		this.RespawnTimeCalculated += this.RespawnTimeIncreasePerDeath;
+
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
 		this.Stomping = false;
@@ -618,6 +628,7 @@ public class Hero : MonoBehaviour
 		this.Die(null);
 		this.Respawn();
 		this.transform.localPosition = Vector3.zero;
+		this.RespawnTimeCalculated = this.RespawnTime;
     }
 
 	void Respawn()
@@ -626,8 +637,8 @@ public class Hero : MonoBehaviour
 		SoundFX.Instance.OnHeroRespawn(this);
 		this.RespawnTimeLeft = -1.0f;
     }
-    
-    
+
+
 
 	void SetGrowStage(int growStage)
 	{
