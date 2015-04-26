@@ -577,9 +577,14 @@ MonoBehaviour:
   StompLand:
   - {fileID: 8300000, guid: c63be38f7e00440d69c55d68aab146dc, type: 3}
   Stunned: []
-  MatchWon: []
-  HeroReachedMaxSize: []
-  HeroAboutToWin: []
+  MatchWon:
+  - {fileID: 8300000, guid: 50a2731a78eb14d17a7e9196f5ec9b73, type: 3}
+  - {fileID: 8300000, guid: c4aa4d8663829478e9f8780805ed4afa, type: 3}
+  HeroReachedMaxSize:
+  - {fileID: 8300000, guid: cffe169441d8e4231bc0e2c7b86979ad, type: 3}
+  HeroAboutToWin:
+  - {fileID: 8300000, guid: f9584d49a1cce4da182d636435e429f0, type: 3}
+  - {fileID: 8300000, guid: 86f78aede8725423a9dc3f7a3f6aa804, type: 3}
   MusicTracks: []
 --- !u!4 &243285036
 Transform:
