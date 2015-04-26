@@ -187,8 +187,20 @@ public class Hero : MonoBehaviour
 		}
 	}
 
+	private Rect box;
 	void FixedUpdate ()
 	{
+		//this.box = new Rect (this.GetComponent<Collider2D>().bounds.
+		Ray2D ray = new Ray (this.transform.position, Vector2.up);
+		bool somethingAboveMe 
+
+	}
+
+	void OldFixedUpdate ()
+	{
+
+
+
 		bool canMove = !this.IsChanneling && !this.Stomping;
 		bool canAct = !this.IsChanneling && !this.Stomping;
 
