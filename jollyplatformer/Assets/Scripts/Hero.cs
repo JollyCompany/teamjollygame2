@@ -40,6 +40,7 @@ public class Hero : MonoBehaviour
 	private bool IsChanneling = false;
 	private GameObject ChannelVisualInstance;
 	private bool CanDoubleJump;
+	private bool GroundedLastFrame;
 
 	public Sprite ProjectileSprite;
 
@@ -121,12 +122,27 @@ public class Hero : MonoBehaviour
 			if (this.RespawnTimeLeft <= 0.0f)
 			{
 				this.transform.position = new Vector3(0,0,0);
+			SoundFX.Instance.OnHeroRespawn(this);
 			}
 		}
 
 		bool grounded = this.IsGrounded();
+		bool justLanded = (grounded && !this.GroundedLastFrame);
+		this.GroundedLastFrame = grounded;
 		JollyDebug.Watch (this, "Grounded", grounded);
 		bool canJump = ((grounded || this.CanDoubleJump) && !this.Stomping);
+
+		if (justLanded)
+		{
+			if (this.Stomping)
+			{
+				SoundFX.Instance.OnHeroStompLand(this);
+			}
+			else
+			{
+				SoundFX.Instance.OnHeroLanded(this);
+			}
+		}
 
 		if (this.HeroController.Jump && canJump)
 		{
@@ -208,6 +224,7 @@ public class Hero : MonoBehaviour
 					{
 						if (this.GetGrowStage() > hero.GetGrowStage())
 						{
+							SoundFX.Instance.OnHeroStompLandSquish(this);
 							hero.Die(this);
 						}
 					}
@@ -225,15 +242,26 @@ public class Hero : MonoBehaviour
 		{
 			if (this.ShouldJump)
 			{
+				bool doubleJumped = false;
 				if (!this.IsGrounded())
 				{
 					this.CanDoubleJump = false;
+					doubleJumped = true;
 				}
 
 				Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
 				rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
 				this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
 				this.ShouldJump = false;
+
+				if (doubleJumped)
+				{
+					SoundFX.Instance.OnHeroDoubleJumped(this);
+				}
+				else
+				{
+					SoundFX.Instance.OnHeroJumped(this);
+				}
 			}
 
 			if (this.ShouldStomp)
@@ -244,6 +272,7 @@ public class Hero : MonoBehaviour
 				rigidBody.velocity = new Vector2(0, 0);
 				this.GetComponent<Rigidbody2D>().AddForce (-Vector2.up * StompForce * 1/this.scale);
 				this.ShouldStomp = false;
+				SoundFX.Instance.OnHeroStompStart(this);
 			}
 
 			if ((horizontal > 0 && !this.FacingRight) || (horizontal < 0 && this.FacingRight))
@@ -264,6 +293,8 @@ public class Hero : MonoBehaviour
 					launchForce = new Vector2(launchForce.x * -1.0f, launchForce.y);
 				}
 				projectile.GetComponent<Rigidbody2D>().AddForce(launchForce);
+
+				SoundFX.Instance.OnHeroFire(this);
 			}
 		}
 
@@ -292,6 +323,7 @@ public class Hero : MonoBehaviour
 
 	void Die (Hero attackingHero)
 	{
+		SoundFX.Instance.OnHeroDies(this);
 		this.RespawnTimeLeft = 5.0f;
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
@@ -306,6 +338,7 @@ public class Hero : MonoBehaviour
 		this.IsChanneling = true;
 		this.ChannelVisualInstance = (GameObject)GameObject.Instantiate(this.ChannelVisual, this.ChannelLocator.transform.position, Quaternion.identity);
 		this.ChannelVisualInstance.GetComponent<ChannelVisual>().ChannelTime = this.ChannelTime;
+		this.ChannelVisualInstance.GetComponent<ChannelVisual>().Hero = this;
 		this.ChannelVisualInstance.transform.localScale = new Vector3(this.ChannelVisualInstance.transform.localScale.x * this.scale, this.ChannelVisualInstance.transform.localScale.y * this.scale, this.ChannelVisualInstance.transform.localScale.z * this.scale);
 	}
 
@@ -326,6 +359,7 @@ public class Hero : MonoBehaviour
 		if (this.CanGrow())
 		{
 			SetGrowStage(this.GetGrowStage() + 1);
+			SoundFX.Instance.OnHeroGrowComplete(this);
 		}
 	}
 

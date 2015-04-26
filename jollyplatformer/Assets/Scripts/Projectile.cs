@@ -28,6 +28,7 @@ public class Projectile : MonoBehaviour
 		if (hero != null && hero != this.OwnerHero)
 		{
 			hero.Hit(this.OwnerHero);
+			SoundFX.Instance.OnHeroHit(hero);
 			Destroy(this.gameObject);
 		}
     }

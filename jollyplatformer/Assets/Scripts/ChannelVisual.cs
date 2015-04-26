@@ -1,14 +1,18 @@
 using UnityEngine;
 using System.Collections;
+using Jolly;
 
 public class ChannelVisual : MonoBehaviour
 {
 	public float ChannelTime;
+	public Hero Hero;
 	private float TimeRemaining;
+	private GameObject soundObject;
 
 	void Start ()
 	{
 		this.TimeRemaining = this.ChannelTime;
+		GameObject soundObject = SoundFX.Instance.OnHeroGrowChannel(this.Hero);
 	}
 
 	void Update ()
@@ -18,6 +22,7 @@ public class ChannelVisual : MonoBehaviour
 
 		if (this.TimeRemaining < 0.0f)
 		{
+			AudioSourceExt.StopClipOnObject(this.soundObject);
 			Destroy (this.gameObject);
 		}
 	}
