@@ -221,7 +221,6 @@ public class Hero : MonoBehaviour
 		{
 			Vector3 direction = this.GroundDetector.transform.position - this.transform.position;
 			RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, direction, direction.magnitude);
-			Debug.Log(string.Format("Hits {0}", hits.Length));
 			if (hits.Length > 0)
 			{
 				for (int i = 0; i < hits.Length; ++i)
