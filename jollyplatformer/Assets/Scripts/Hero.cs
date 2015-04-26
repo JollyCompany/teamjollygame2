@@ -67,11 +67,6 @@ public class Hero : MonoBehaviour
 		}
 	}
 
-	bool IsGrounded()
-	{
-		return Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));;
-	}
-
 	void OnGUI()
 	{
 		this.DrawHUD(this.HUDPosition);
@@ -115,41 +110,78 @@ public class Hero : MonoBehaviour
 
 	void Update ()
 	{
+		bool canMove = !this.IsChanneling && !this.Stomping;
+		bool canAct = !this.IsChanneling && !this.Stomping;
+
 		if (this.grounded)
 		{
 			this.CanDoubleJump = true;
 		}
 
-		if (this.HeroController.Jump)
+
+		if (canMove)
 		{
-			bool doubleJumped = false;
+			this.velocity = new Vector2 (this.HeroController.HorizontalMovementAxis * this.MaxNewSpeed, this.velocity.y);
+		}
+		else
+		{
+			this.velocity = new Vector2 (0.0f, this.velocity.y);
+		}
 
-			if (this.grounded || this.CanDoubleJump)
+		if (canAct)
+		{
+			if (this.HeroController.Jump)
 			{
-				if (!this.grounded)
+				bool doubleJumped = false;
+
+				if (this.grounded || this.CanDoubleJump)
 				{
-					this.CanDoubleJump = false;
+					if (!this.grounded)
+					{
+						this.CanDoubleJump = false;
+					}
+					this.velocity = new Vector2 (this.velocity.x, this.Jump);
 				}
-				this.velocity = new Vector2 (this.velocity.x, this.Jump);
-			}
 
-			if (doubleJumped)
-			{
-				SoundFX.Instance.OnHeroDoubleJumped(this);
-			}
-			else
-			{
-				SoundFX.Instance.OnHeroJumped(this);
+				if (doubleJumped)
+				{
+					SoundFX.Instance.OnHeroDoubleJumped(this);
+				}
+				else
+				{
+					SoundFX.Instance.OnHeroJumped(this);
+				}
 			}
 		}
 
+		{
+			if (this.HeroController.GetBiggerEnd)
+			{
+				this.StopChannelGrow();
+			}
+			else if (this.HeroController.GetBiggerHold)
+			{
+				if (this.IsChanneling)
+				{
+					this.TimeSpentChanneling += Time.deltaTime;
 
-		this.velocity = new Vector2 (this.HeroController.HorizontalMovementAxis * this.MaxNewSpeed, this.velocity.y);
+					if (this.TimeSpentChanneling > this.ChannelTime)
+					{
+						this.StopChannelGrow();
+						this.Grow();
+					}
+				}
+				else if (this.CanGrow ())
+				{
+					this.StartChannelGrow();
+					this.velocity = new Vector2 (0.0f, this.velocity.y);
+				}
+			}
+		}
 	}
 
 	void OldUpdate ()
 	{
-
 		if (this.RespawnTimeLeft > 0.0f)
 		{
 			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
@@ -162,7 +194,7 @@ public class Hero : MonoBehaviour
 			}
 		}
 
-		bool grounded = this.IsGrounded();
+		bool grounded = true;
 		bool justLanded = (grounded && !this.GroundedLastFrame);
 		this.GroundedLastFrame = grounded;
 		JollyDebug.Watch (this, "Grounded", grounded);
@@ -367,29 +399,6 @@ public class Hero : MonoBehaviour
 
 		if (canAct)
 		{
-			if (this.ShouldJump)
-			{
-				bool doubleJumped = false;
-				if (!this.IsGrounded())
-				{
-					this.CanDoubleJump = false;
-					doubleJumped = true;
-				}
-
-				Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
-				rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
-				this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
-				this.ShouldJump = false;
-
-				if (doubleJumped)
-				{
-					SoundFX.Instance.OnHeroDoubleJumped(this);
-				}
-				else
-				{
-					SoundFX.Instance.OnHeroJumped(this);
-				}
-			}
 
 			if (this.ShouldStomp)
 			{
@@ -400,11 +409,6 @@ public class Hero : MonoBehaviour
 				this.GetComponent<Rigidbody2D>().AddForce (-Vector2.up * StompForce * 1/this.scale);
 				this.ShouldStomp = false;
 				SoundFX.Instance.OnHeroStompStart(this);
-			}
-
-			if ((horizontal > 0 && !this.FacingRight) || (horizontal < 0 && this.FacingRight))
-			{
-				this.Flip();
 			}
 
 		}
@@ -462,7 +466,7 @@ public class Hero : MonoBehaviour
 
 	bool CanGrow()
 	{
-		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.IsGrounded();
+		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.grounded;
 	}
 
 	void Grow()
