@@ -64,6 +64,7 @@ public class Hero : MonoBehaviour
 	private bool CanDoubleJump;
 	private bool GroundedLastFrame;
 	private float StartScale;
+	private Vector3 SpawnPoint;
 
 	public Sprite[] BodySprites;
 	public Sprite[] ProjectileSprites;
@@ -76,6 +77,7 @@ public class Hero : MonoBehaviour
 		this.GetComponentInChildren<SpriteRenderer>().sprite = this.BodySprites[this.HeroController.PlayerNumber];
 		this.ProjectileSprite = this.ProjectileSprites[this.HeroController.PlayerNumber];
 		this.StartScale = this.scale;
+		this.SpawnPoint = this.transform.position;
 
 		JollyDebug.Watch (this, "FacingRight", delegate ()
 		{
@@ -141,6 +143,20 @@ public class Hero : MonoBehaviour
 		}
 	}
 
+	public void Reset()
+	{
+		this.Die(null);
+		this.Respawn();
+		this.transform.position = this.SpawnPoint;
+	}
+
+	void Respawn()
+	{
+		this.transform.position = new Vector3(0,0,0);
+		SoundFX.Instance.OnHeroRespawn(this);
+		this.RespawnTimeLeft = -1.0f;
+	}
+
 	void Update ()
 	{
 		if (this.RespawnTimeLeft > 0.0f)
@@ -150,8 +166,7 @@ public class Hero : MonoBehaviour
 			this.RespawnTimeLeft -= Time.deltaTime;
 			if (this.RespawnTimeLeft <= 0.0f)
 			{
-				this.transform.position = new Vector3(0,0,0);
-				SoundFX.Instance.OnHeroRespawn(this);
+				this.Respawn();
 			}
 		}
 
@@ -222,6 +237,12 @@ public class Hero : MonoBehaviour
 					this.velocity = new Vector2 (0.0f, this.velocity.y);
 				}
 			}
+		}
+
+		if (this.HeroController.GetResetGame)
+		{
+			GameObject scoreKeeper = GameObject.Find("ScoreKeeper");
+			scoreKeeper.GetComponent<ScoreKeeper>().ResetGame();
 		}
 	}
 
