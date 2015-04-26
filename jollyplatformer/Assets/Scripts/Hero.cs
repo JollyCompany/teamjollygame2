@@ -490,7 +490,14 @@ public class Hero : MonoBehaviour
 			return;
 		}
 
-		this.Die(attackingHero);
+		if (this.GetComponent<ShieldBuff>().enabled)
+		{
+			this.GetComponent<ShieldBuff>().enabled = false;
+		}
+		else
+		{
+			this.Die(attackingHero);
+		}
 	}
 
 	void Die(Hero attackingHero)
