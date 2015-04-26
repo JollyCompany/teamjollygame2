@@ -8,7 +8,20 @@ public class Hero : MonoBehaviour
 	public float StompForce;
 	public float ScaleAdjustment;
 	public int ScaleIterations;
-	public Vector2 HUDPosition;
+	public Vector2 HUDPosition
+	{
+		get
+		{
+			switch (this.PlayerIndex)
+			{
+			case 1: return new Vector2 (15, 35);
+			case 2: return new Vector2 (495, 35);
+			case 3: return new Vector2 (975, 35);
+			case 4: return new Vector2 (1455, 35);
+			}
+			return Vector2.zero;
+		}
+	}
 	public GameObject GroundDetector;
 	public GameObject ProjectileEmitLocator;
 	public GameObject ChannelLocator;
@@ -20,7 +33,13 @@ public class Hero : MonoBehaviour
 	public float ChannelTime;
 	public float RespawnTime;
 	public float StunTime;
-	public int PlayerIndex;
+	public int PlayerIndex
+	{
+		get
+		{
+			return 1+this.HeroController.PlayerNumber;
+		}
+	}
 	public GUIText HUDText;
 	public float TimeAtMaxSize;
 
@@ -443,6 +462,8 @@ public class Hero : MonoBehaviour
 		{
 			return;
 		}
+
+		JollyDebug.Log ("GETING HIT");
 
 		this.Die(attackingHero);
 	}

@@ -290,6 +290,14 @@ Prefab:
       propertyPath: m_Name
       value: Hero[0]
       objectReference: {fileID: 0}
+    - target: {fileID: 11466392, guid: 27ab4ff619d2c4e8db6ee852cd94d92a, type: 2}
+      propertyPath: StunTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11466392, guid: 27ab4ff619d2c4e8db6ee852cd94d92a, type: 2}
+      propertyPath: RespawnTime
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 27ab4ff619d2c4e8db6ee852cd94d92a, type: 2}
   m_IsPrefabParent: 0
@@ -812,6 +820,7 @@ MonoBehaviour:
   StompLandStun: []
   StompLandSquish: []
   StompLand: []
+  Stunned: []
   MusicTracks: []
 --- !u!4 &243285036
 Transform:
