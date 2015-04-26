@@ -262,7 +262,7 @@ MonoBehaviour:
   StompSpeed: 30
   StompGravity: 3.5
   MaxStompFall: 50
-  Jump: 18
+  Jump: 20
   Acceleration: 4
   MaxNewSpeed: 10
   GrowPopSpeed: 3
