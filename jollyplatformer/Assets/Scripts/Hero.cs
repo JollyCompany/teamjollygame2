@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using Jolly;
 
@@ -95,6 +96,19 @@ public class Hero : MonoBehaviour
 
 		GUI.DrawTexture(new Rect(xPosition / 1920.0f * Screen.width, (position.y - heartSizeWidth * 0.5f) / 1080.0f * Screen.height, heartSizeWidth / 1920.0f * Screen.width, heartSizeWidth / 1920.0f * Screen.width), heart);
 		xPosition += (iconSizeWidth * 1.5f);
+
+		float textWidth = 100;
+
+		GUIStyle style = new GUIStyle("label");
+		style.font = this.HUDText.font;
+		style.fontSize = 20;
+		style.alignment = TextAnchor.UpperLeft;
+
+		if (this.RespawnTimeLeft > 0)
+		{
+			string displayString = ((int)Math.Ceiling(this.RespawnTimeLeft)).ToString();
+			this.DrawOutlineText(new Rect((position.x + iconSizeWidth * 0.25f) / 1920.0f * Screen.width, 0, textWidth, 40), displayString, style, Color.black, Color.white, 1);
+		}
 	}
 
 	void Update ()
@@ -178,6 +192,15 @@ public class Hero : MonoBehaviour
 		if (Mathf.Abs(this.GetComponent<Rigidbody2D>().velocity.x) > maxSpeed)
 		{
 			this.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign (this.GetComponent<Rigidbody2D>().velocity.x) * maxSpeed, this.GetComponent<Rigidbody2D>().velocity.y);
+		}
+
+		if (this.Stomping)
+		{
+			Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
+			if (rigidBody.velocity.y > -0.5f)
+			{
+				this.Stomping = false;
+			}
 		}
 
 		if (canAct)
