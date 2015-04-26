@@ -589,12 +589,15 @@ public class Hero : MonoBehaviour
 		return this.IsAlive() && this.GetGrowStage() < this.ScaleIterations && this.grounded && !this.IsStunned ();
 	}
 
-	public void Grow(bool force = false)
+	public void Grow(bool growByPickup = false)
 	{
-		if (force || this.CanGrow())
+		if (growByPickup || this.CanGrow())
 		{
 			SetGrowStage(this.GetGrowStage() + 1);
-			this.velocity += new Vector2 (0.0f, this.GrowPopSpeed);
+			if (!growByPickup)
+			{
+				this.velocity = new Vector2 (0.0f, this.GrowPopSpeed);
+			}
 
 			if (this.GetGrowStage() == this.ScaleIterations)
 			{
