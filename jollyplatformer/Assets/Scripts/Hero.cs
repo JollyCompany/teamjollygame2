@@ -31,6 +31,7 @@ public class Hero : MonoBehaviour
 	public GameObject MaxGrowthVisual;
 	public float ChannelTime;
 	public float RespawnTime;
+	public float RespawnTimeIncreasePerDeath;
 	public float StunTime;
 	public int PlayerIndex
 	{
@@ -52,6 +53,7 @@ public class Hero : MonoBehaviour
 	private bool FacingRight = true;
 
 	private bool Stomping = false;
+	private float RespawnTimeCalculated = 0.0f;
 	private float RespawnTimeLeft = 0.0f;
 	private float TimeLeftStunned = 0.0f;
 	private float TimeSpentChanneling = 0.0f;
@@ -70,10 +72,10 @@ public class Hero : MonoBehaviour
 	void Start ()
 	{
 		this.HeroController = this.GetComponent<HeroController>();
-		JollyDebug.Log ("Player Number = {0}", this.HeroController.PlayerNumber);
 		this.GetComponentInChildren<SpriteRenderer>().sprite = this.BodySprites[this.HeroController.PlayerNumber];
 		this.ProjectileSprite = this.ProjectileSprites[this.HeroController.PlayerNumber];
 		this.StartScale = this.scale;
+		this.RespawnTimeCalculated = this.RespawnTime;
 
 		JollyDebug.Watch (this, "FacingRight", delegate ()
 		{
@@ -87,7 +89,11 @@ public class Hero : MonoBehaviour
 	{
 		set
 		{
+			float minYOld = this.GetComponent<Collider2D>().bounds.min.y;
 			this.transform.localScale = new Vector3((this.FacingRight ? 1.0f : -1.0f) * value, value, 1.0f);
+			float minYNew = this.GetComponent<Collider2D>().bounds.min.y;
+			Vector3 v = this.transform.position;
+			this.transform.position = new Vector3(v.x, v.y + minYOld - minYNew, v.z);
 		}
 		get
 		{
@@ -146,7 +152,10 @@ public class Hero : MonoBehaviour
 			this.transform.position = new Vector3(0.0f, -20.0f, 0.0f);
 
 			this.RespawnTimeLeft -= Time.deltaTime;
-			this.Respawn ();
+			if (this.RespawnTimeLeft < 0.0)
+			{
+				this.Respawn ();
+			}
 		}
 
 		bool canMove = !this.IsChanneling && !this.Stomping && !this.IsStunned();
@@ -163,7 +172,7 @@ public class Hero : MonoBehaviour
 		}
 		else
 		{
-			this.velocity = new Vector2 (0.0f, this.velocity.y);
+			this.velocity = new Vector2 (this.velocity.x * (1.0f - Mathf.Clamp01 (Time.deltaTime)), this.velocity.y);
 		}
 
 		if (canAct)
@@ -193,7 +202,15 @@ public class Hero : MonoBehaviour
 			}
 		}
 
-		if (this.IsChanneling && this.HeroController.GetBiggerEnd)
+		this.canChannelGrow = !this.falling && Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));
+		JollyDebug.Watch (this, "Grounded", grounded);
+
+		if (this.canChannelGrow)
+		{
+			this.canStomp = true;
+		}
+
+		if (this.IsChanneling && (this.HeroController.GetBiggerEnd || !this.canChannelGrow))
 		{
 			this.StopChannelGrow();
 		}
@@ -227,12 +244,15 @@ public class Hero : MonoBehaviour
 	public float Jump = 200.0f;
 	public float Acceleration = 4.0f;
 	public float MaxNewSpeed = 150.0f;
+	public float GrowPopSpeed = 1.0f;
 	public int VerticalRays;
+	private bool canChannelGrow;
 
 	private Rect box;
 	private Vector2 velocity = Vector2.zero;
-	private bool falling = false;
+	private bool falling = true;
 	private bool grounded = false;
+	private bool canStomp = true;
 	private int groundMask;
 
 	void FixedUpdate ()
@@ -243,7 +263,7 @@ public class Hero : MonoBehaviour
 		if (this.TimeLeftStunned > 0.0f)
 		{
 			this.TimeLeftStunned -= Time.fixedDeltaTime;
-			
+
 			if (this.TimeLeftStunned <= 0.0f)
             {
                 this.StopStun();
@@ -325,7 +345,6 @@ public class Hero : MonoBehaviour
 						}
 						Stomping = false;
 						grounded = true;
-						this.CanDoubleJump = true;
 						if (falling)
 						{
 							this.transform.Translate (Vector3.down * (raycastHit.distance - this.StaticMargin));
@@ -333,10 +352,12 @@ public class Hero : MonoBehaviour
 						falling = false;
 						if (bounce)
 						{
+							this.CanDoubleJump = false;
 							velocity = new Vector2 (velocity.x, this.Jump);
 						}
 						else
 						{
+							this.CanDoubleJump = true;
 							velocity = new Vector2 (velocity.x, Mathf.Max (0.0f, velocity.y));
 						}
 
@@ -375,21 +396,22 @@ public class Hero : MonoBehaviour
 				SoundFX.Instance.OnHeroFire(this);
 			}
 
-			if (this.HeroController.Stomping && !this.grounded)
+			if (this.HeroController.Stomping && !this.grounded && this.canStomp)
 			{
+				this.canStomp = false;
 				this.Stomping = true;
 				this.velocity = new Vector2(0.0f, this.StompSpeed);
 	            SoundFX.Instance.OnHeroStompStart(this);
 			}
-            
+
         }
-		
+
 		if (this.HeroController.GetResetGame)
 		{
 			GameObject scoreKeeper = GameObject.Find("ScoreKeeper");
 			scoreKeeper.GetComponent<ScoreKeeper>().ResetGame();
         }
-        
+
     }
 
 
@@ -509,8 +531,15 @@ public class Hero : MonoBehaviour
 
 	void Die(Hero attackingHero)
 	{
+		if (!this.IsAlive())
+		{
+			return;
+		}
+
 		SoundFX.Instance.OnHeroDies(this);
-		this.RespawnTimeLeft = this.RespawnTime;
+		this.RespawnTimeLeft = this.RespawnTimeCalculated;
+		this.RespawnTimeCalculated += this.RespawnTimeIncreasePerDeath;
+
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
 		this.Stomping = false;
@@ -597,6 +626,7 @@ public class Hero : MonoBehaviour
 		if (this.CanGrow())
 		{
 			SetGrowStage(this.GetGrowStage() + 1);
+			this.velocity = new Vector2 (0.0f, this.GrowPopSpeed);
 
 			if (this.GetGrowStage() == this.ScaleIterations)
 			{
@@ -615,6 +645,7 @@ public class Hero : MonoBehaviour
 		this.Die(null);
 		this.Respawn();
 		this.transform.localPosition = Vector3.zero;
+		this.RespawnTimeCalculated = this.RespawnTime;
     }
 
 	void Respawn()
@@ -623,8 +654,8 @@ public class Hero : MonoBehaviour
 		SoundFX.Instance.OnHeroRespawn(this);
 		this.RespawnTimeLeft = -1.0f;
     }
-    
-    
+
+
 
 	void SetGrowStage(int growStage)
 	{
