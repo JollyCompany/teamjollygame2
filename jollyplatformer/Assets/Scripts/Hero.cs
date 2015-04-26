@@ -496,6 +496,7 @@ public class Hero : MonoBehaviour
 
 		GameObject projectileExplosion = (GameObject)GameObject.Instantiate(attackingHero.ProjectileExplosion, this.transform.position, Quaternion.identity);
 		projectileExplosion.GetComponent<SpriteRenderer>().sprite = attackingHero.ProjectileExplosionSprite;
+		projectileExplosion.transform.localScale *= attackingHero.scale / attackingHero.StartScale;
 
 		if (this.GetComponent<ShieldBuff>().enabled)
 		{
