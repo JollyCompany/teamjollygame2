@@ -7,6 +7,7 @@ public class Hero : MonoBehaviour
 	public float MaxSpeed;
 	public float MoveForce;
 	public float JumpForce;
+	public float StompForce;
 	public float ScaleAdjustment;
 	public int ScaleIterations;
 	public Vector2 HUDPosition;
@@ -29,8 +30,10 @@ public class Hero : MonoBehaviour
 	private float TimeUntilNextProjectile = 0.0f;
 
 	private bool ShouldJump = false;
+	private bool ShouldStomp = false;
 	private bool FacingRight = true;
 
+	private bool Stomping = false;
 	private float RespawnTimeLeft = 0.0f;
 	private float TimeSpentChanneling = 0.0f;
 	private bool IsChanneling = false;
@@ -109,7 +112,9 @@ public class Hero : MonoBehaviour
 
 		bool grounded = this.IsGrounded();
 		JollyDebug.Watch (this, "Grounded", grounded);
-		if (this.HeroController.Jump && (grounded || this.CanDoubleJump))
+		bool canJump = ((grounded || this.CanDoubleJump) && !this.Stomping);
+
+		if (this.HeroController.Jump && canJump)
 		{
 			this.ShouldJump = true;
 		}
@@ -117,10 +122,15 @@ public class Hero : MonoBehaviour
 		if (grounded)
 		{
 			this.CanDoubleJump = true;
+			this.Stomping = false;
 		}
 
-		float viewportPointOfEdgeDetector = this.RenderingCamera.WorldToViewportPoint(this.ScreenEdgeDetector.transform.position).x;
-		this.AtEdgeOfScreen = viewportPointOfEdgeDetector < 0.0f || viewportPointOfEdgeDetector >= 1.0f;
+		JollyDebug.Watch (this, "Stomping", this.Stomping);
+
+		if (this.HeroController.Stomping && !grounded)
+		{
+			this.ShouldStomp = true;
+		}
 
 		this.TimeUntilNextProjectile -= Time.deltaTime;
 
@@ -149,8 +159,11 @@ public class Hero : MonoBehaviour
 
 	void FixedUpdate ()
 	{
-		bool canMove = !this.IsChanneling;
-		bool canAct = !this.IsChanneling;
+		bool canMove = !this.IsChanneling && !this.Stomping;
+		bool canAct = !this.IsChanneling && !this.Stomping;
+
+		JollyDebug.Watch (this, "CanMove", canMove);
+		JollyDebug.Watch (this, "CanAct", canAct);
 
 		float horizontal = this.HeroController.HorizontalMovementAxis;
 		if (!canMove)
@@ -176,8 +189,20 @@ public class Hero : MonoBehaviour
 					this.CanDoubleJump = false;
 				}
 
+				Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
+				rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
 				this.GetComponent<Rigidbody2D>().AddForce (Vector2.up * JumpForce * 1/this.scale);
 				this.ShouldJump = false;
+			}
+
+			if (this.ShouldStomp)
+			{
+				this.Stomping = true;
+
+				Rigidbody2D rigidBody = this.GetComponent<Rigidbody2D>();
+				rigidBody.velocity = new Vector2(0, 0);
+				this.GetComponent<Rigidbody2D>().AddForce (-Vector2.up * StompForce * 1/this.scale);
+				this.ShouldStomp = false;
 			}
 
 			if ((horizontal > 0 && !this.FacingRight) || (horizontal < 0 && this.FacingRight))

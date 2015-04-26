@@ -3852,6 +3852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeToWin: 20
+  WinningHero: {fileID: 0}
 --- !u!1 &1446188482
 GameObject:
   m_ObjectHideFlags: 0

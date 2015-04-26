@@ -200,7 +200,7 @@ namespace InControl
 
 		Vector2 DPadVector
 		{
-			get 
+			get
 			{
 				var x = DPadLeft.State ? -DPadLeft.Value : DPadRight.Value;
 				var t = DPadUp.State ? DPadUp.Value : -DPadDown.Value;
@@ -208,8 +208,8 @@ namespace InControl
 				return new Vector2( x, y ).normalized;
 			}
 		}
-		
-		
+
+
 		public bool LastChangedAfter( InputDevice otherDevice )
 		{
 			return LastChangeTick > otherDevice.LastChangeTick;
@@ -300,27 +300,27 @@ namespace InControl
 
 		public float DPadX
 		{
-			get 
-			{ 
-				return DPad.X; 
+			get
+			{
+				return DPad.X;
 			}
 		}
 
 
 		public float DPadY
 		{
-			get 
-			{ 
-				return DPad.Y; 
+			get
+			{
+				return DPad.Y;
 			}
 		}
 
 
 		public TwoAxisInputControl Direction
 		{
-			get 
-			{ 
-				return DPad.UpdateTick > LeftStick.UpdateTick ? DPad : LeftStick; 
+			get
+			{
+				return DPad.UpdateTick > LeftStick.UpdateTick ? DPad : LeftStick;
 			}
 		}
 	}
