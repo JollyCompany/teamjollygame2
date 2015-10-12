@@ -14,6 +14,18 @@ Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll.mdb
 Temp/
 Library/ScriptAssemblies/CompilationCompleted.txt
 
+# =============== #
+# Unity generated #
+# =============== #
+iOS/
+Temp/
+[Oo]bj/
+UnityGenerated/
+Library/
+iOS/Libraries/
+xcuserdata
+project.xcworkspace
+
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
 # ===================================== #
