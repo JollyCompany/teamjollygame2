@@ -53,7 +53,6 @@ public class Hero : MonoBehaviour
 	public float ProjectileDelay;
 	private float TimeUntilNextProjectile = 0.0f;
 
-	private bool ShouldJump = false;
 	private bool FacingRight = true;
 
 	private bool Stomping = false;
@@ -88,11 +87,6 @@ public class Hero : MonoBehaviour
 		this.StartScale = this.scale;
 		this.StartWidth = this.GetComponent<Collider2D>().bounds.size.x;
 		this.RespawnTimeCalculated = this.RespawnTime;
-
-		JollyDebug.Watch (this, "FacingRight", delegate ()
-		{
-			return this.FacingRight;
-		});
 
 		this.groundMask = LayerMask.NameToLayer ("Ground");
 	}
@@ -130,8 +124,6 @@ public class Hero : MonoBehaviour
 	{
 		float iconSizeWidth = 50;
 		float heartSizeWidth = 35;
-
-		float textWidth = 100;
 
 		float xPosition = position.x;
 
@@ -195,15 +187,10 @@ public class Hero : MonoBehaviour
 
 
 		this.JumpForgivenessTimeLeft -= Time.deltaTime;
-		JollyDebug.Watch (this, "JumpForgivenessTimeLeft", this.JumpForgivenessTimeLeft);
 
 		bool canAct = !this.IsChanneling && !this.Stomping && !this.IsStunned();
-
-
-		//bool canAct = !this.Stomping && !this.IsChanneling;
 		if (canAct)
 		{
-			JollyDebug.Watch (this, "TimeUntilNextProjectile", this.TimeUntilNextProjectile);
 			if (this.HeroController.Shooting && this.TimeUntilNextProjectile < 0.0f)
 			{
 				this.TimeUntilNextProjectile = this.ProjectileDelay;
@@ -279,7 +266,6 @@ public class Hero : MonoBehaviour
 		}
 
 		this.canChannelGrow = !this.falling && Physics2D.Linecast(this.transform.position, this.GroundDetector.transform.position, 1 << LayerMask.NameToLayer ("Ground"));
-		JollyDebug.Watch (this, "Grounded", grounded);
 
 		if (this.canChannelGrow)
 		{
@@ -370,7 +356,6 @@ public class Hero : MonoBehaviour
 
             float distance = this.StaticMargin + (this.grounded ? this.StaticMargin : Mathf.Abs (this.velocity.y * this.FallingMargin * Time.fixedDeltaTime));
 			int verticalRays = Mathf.Max (3, Mathf.CeilToInt ((endPoint.x - startPoint.x) / this.StartWidth));
-			JollyDebug.Watch (this, "Vertical Rays", verticalRays);
 
 			for (int i = 0; i < verticalRays; ++i)
 			{
@@ -526,7 +511,6 @@ public class Hero : MonoBehaviour
 		this.SetGrowStage(0);
 		this.StopChannelGrow();
 		this.Stomping = false;
-		this.ShouldJump = false;
 
 		this.TimeAtMaxSize = 0;
 		this.RemoveMaxSizeVisual();
@@ -661,17 +645,6 @@ public class Hero : MonoBehaviour
 	{
 		return (int)((this.scale - this.StartScale) / (ScaleAdjustment * this.StartScale));
 	}
-
-	/*
-	void OnCollisionEnter2D(Collision2D coll)
-	{
-		Debug.Log ("Collision Enter 2D " + coll.collider.bounds.ToString() + " " + Random.value);
-	}
-
-	void OnCollisionExit2D(Collision2D coll)
-	{
-		Debug.Log ("Collision Exit 2D " + coll.collider.bounds.ToString() + " " + Random.value);
-	}*/
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
